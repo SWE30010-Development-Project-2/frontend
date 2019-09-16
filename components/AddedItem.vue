@@ -1,18 +1,13 @@
 <template>
   <b-row class="pb-1 pt-1 align-items-center">
-    <b-col cols="4">
+    <b-col cols="6">
       {{ quantity }} x {{ name }}
     </b-col>
-    <b-col cols="4">
-      <number
-        v-model="quantity"
-        min="1"
-        max="999999999"
-        step="1"
-      />
+    <b-col cols="3">
+      <number v-model="quantity" />
     </b-col>
-    <b-col cols="auto">
-      <b-button variant="outline-danger">
+    <b-col cols="3" class="text-right">
+      <b-button variant="outline-danger" class="w-100">
         Remove
       </b-button>
       </number-plus-minus>
@@ -27,11 +22,6 @@ export default {
   components: {
     Number
   },
-  props: ['name'],
-  data () {
-    return {
-      quantity: 2
-    }
-  }
+  props: ['name', 'quantity']
 }
 </script>
