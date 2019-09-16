@@ -15,9 +15,9 @@
             </b-col>
           </b-form-row>
           <b-row>
-            <product name="Paracetemol" img-src="http://image.made-in-china.com/2f0j00leMQCKIBCYuo/Paracetamol-Tablet.jpg" />
-            <product name="Sambucol" img-src="https://www.yourdiscountchemist.com.au/media/catalog/product/cache/afad95d7734d2fa6d0a8ba78597182b7/2/4/247688_2.jpg" />
-            <product name="Xanax" img-src="http://www.kwikmed.in/images/source/Xanax2mg.jpg" />
+            <product name="Paracetamol" img-src="/images/paracetamol.jpg" cat="Painkiller" />
+            <product name="Sambucol" img-src="/images/sambucol.jpg" cat="Throat lozenge" />
+            <product name="Xanax" img-src="/images/xanax.jpg" cat="?" />
           </b-row>
         </b-col>
         <b-col cols="4" class="bg-light">
