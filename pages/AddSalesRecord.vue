@@ -24,7 +24,8 @@
           <h2 class="h3 align-items-center border-bottom pt-3 pb-3 mb-3">
             Added items
           </h2>
-          <added-item name="Product 1" quantity="3" />
+          <added-item name="Paracetemol" quantity="3" />
+          <added-item name="Sambucol" quantity="1" />
         </b-col>
       </b-row>
     </b-container>
