@@ -1,19 +1,19 @@
 <template>
-  <b-col>
+  <b-col cols="2">
     <b-card
       :title="name"
-      img-src="https://picsum.photos/600/300/?image=25"
-      img-alt="Image"
+      :img-src="imgSrc"
+      :img-alt="name"
       img-top
-      tag="article"
-      style="max-width: 20rem;"
-      class="mb-2"
+      tag="button"
+
+      class="mb-2 pl-0 pr-0"
     />
   </b-col>
 </template>
 
 <script>
 module.exports = {
-  props: ['name']
+  props: ['name', 'imgSrc']
 }
 </script>
