@@ -1,78 +1,45 @@
 <template>
   <div>
     <navbar title="Add Sales Record Page" />
-    <div class="links">
-      <a
-        href=""
-        target="_blank"
-        class="button--green"
-      >
-        Today
-      </a>
-      <a
-        href=""
-        target="_blank"
-        class="button--grey"
-      >
-        Past Week
-      </a>
-      <a
-        href=""
-        target="_blank"
-        class="button--grey"
-      >
-        Past year
-      </a>
-      <div id="employee-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Product Name</th>
-              <th>Sale Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Richard Hendricks</td>
-              <td>richard@piedpiper.com</td>
-            </tr>
-            <tr>
-              <td>Bertram Gilfoyle</td>
-              <td>gilfoyle@piedpiper.com</td>
-            </tr>
-            <tr>
-              <td>Dinesh Chugtai</td>
-              <td>dinesh@piedpiper.com</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</template>
+    <b-container fluid>
+      <b-row>
+        <b-col cols="8">
+          <b-form-row class="pt-3 pb-3">
+            <b-col>
+              <b-form-input :type="search" placeholder="Search Products" />
+            </b-col>
+            <b-col cols="auto">
+              <b-button variant="primary">
+                Enter Barcode
+              </b-button>
+            </b-col>
+          </b-form-row>
+          <b-row>
+            <product name="Paracetamol" img-src="/images/paracetamol.jpg" cat="Painkiller" />
+            <product name="Sambucol" img-src="/images/sambucol.jpg" cat="Throat lozenge" />
+            <product name="Xanax" img-src="/images/xanax.jpg" cat="Chill pill" href="/DisplaySalesRecord" />
+          </b-row>
+        </b-col>
+        <b-col cols="4" class="bg-light">
+          <h2 class="h3 align-items-center border-bottom pt-3 pb-3 mb-3">
+            Added items
+          </h2>
+          <added-item name="Paracetemol" quantity="3" />
+          <added-item name="Sambucol" quantity="1" />
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
 <script>
+import Product from '~/components/Product.vue'
 import Navbar from '~/components/Navbar.vue'
+import AddedItem from '~/components/AddedItem.vue'
 
 export default {
   components: {
-    Navbar
+    Product, Navbar, AddedItem
   }
 }
 </script>
-
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.links {
-  padding-top: 15px;
-}
-</style>
