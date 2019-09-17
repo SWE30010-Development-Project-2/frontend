@@ -24,7 +24,7 @@
         Past year
       </a>
       <div id="employee-table">
-        <table>
+        <table class="table table-striped">
           <thead>
             <tr>
               <th>Product Name</th>
@@ -33,16 +33,16 @@
           </thead>
           <tbody>
             <tr>
-              <td>Richard Hendricks</td>
-              <td>richard@piedpiper.com</td>
+              <td>Xanax</td>
+              <td>5</td>
             </tr>
             <tr>
-              <td>Bertram Gilfoyle</td>
-              <td>gilfoyle@piedpiper.com</td>
+              <td>paracetamol</td>
+              <td>500</td>
             </tr>
             <tr>
-              <td>Dinesh Chugtai</td>
-              <td>dinesh@piedpiper.com</td>
+              <td>Sambucol</td>
+              <td>40</td>
             </tr>
           </tbody>
         </table>
@@ -74,5 +74,13 @@ export default {
 }
 .links {
   padding-top: 15px;
+   justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.table {
+    align-items: center;
+    text-align: center;
+    justify-content: center;
 }
 </style>
