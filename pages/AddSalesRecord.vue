@@ -6,18 +6,13 @@
         <b-col cols="8">
           <b-form-row class="pt-3 pb-3">
             <b-col>
-              <b-form-input :type="search" placeholder="Search Products" />
-            </b-col>
-            <b-col cols="auto">
-              <b-button variant="primary">
-                Enter Barcode
-              </b-button>
+              <b-form-input :type="search" placeholder="Search Products or Enter Barcode" />
             </b-col>
           </b-form-row>
           <b-row>
-            <product name="Paracetamol" img-src="/images/paracetamol.jpg" cat="Painkiller" />
-            <product name="Sambucol" img-src="/images/sambucol.jpg" cat="Throat lozenge" />
-            <product name="Xanax" img-src="/images/xanax.jpg" cat="?" />
+            <product name="Paracetamol" img-src="/images/paracetamol.jpg" barcode="1244534534" />
+            <product name="Sambucol" img-src="/images/sambucol.jpg" barcode="1244999534" />
+            <product name="Xanax" img-src="/images/xanax.jpg" barcode="124454444" />
           </b-row>
         </b-col>
         <b-col cols="4" class="bg-light">

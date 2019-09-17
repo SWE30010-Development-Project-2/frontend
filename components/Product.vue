@@ -7,7 +7,7 @@
           {{ name }}
         </h5>
         <p class="card-text">
-          <small class="text-muted">{{ cat }}</small>
+          <small class="text-muted">{{ barcode }}</small>
         </p>
       </div>
     </button>
@@ -16,6 +16,6 @@
 
 <script>
 module.exports = {
-  props: ['name', 'imgSrc', 'cat']
+  props: ['name', 'imgSrc', 'barcode']
 }
 </script>

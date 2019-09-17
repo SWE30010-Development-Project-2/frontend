@@ -1,28 +1,31 @@
 <template>
-  <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        pharmacy
-      </h1>
-      <h2 class="subtitle">
-        People Health Pharmacy App
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+  <div>
+    <navbar title="Home Page" />
+    <div class="container">
+      <div>
+        <logo />
+        <h1 class="title">
+          pharmacy
+        </h1>
+        <h2 class="subtitle">
+          People Health Pharmacy App
+        </h2>
+        <div class="links">
+          <a
+            href="https://nuxtjs.org/"
+            target="_blank"
+            class="button--green"
+          >
+            Documentation
+          </a>
+          <a
+            href="https://github.com/nuxt/nuxt.js"
+            target="_blank"
+            class="button--grey"
+          >
+            GitHub
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -30,10 +33,11 @@
 
 <script>
 import Logo from '~/components/Logo.vue'
+import Navbar from '~/components/Navbar.vue'
 
 export default {
   components: {
-    Logo
+    Logo, Navbar
   }
 }
 </script>
