@@ -1,21 +1,27 @@
 <template>
-  <b-col cols="2">
-    <button class="card mb-3 px-0">
-      <img class="card-img-top" :src="imgSrc" :alt="name">
-      <div class="card-body">
-        <h5 class="card-title">
-          {{ name }}
-        </h5>
-        <p class="card-text">
-          <small class="text-muted">{{ barcode }}</small>
-        </p>
-      </div>
-    </button>
-  </b-col>
+  <button class="card mb-3 px-0" @click="$emit('click')">
+    <img class="card-img-top" :src="imgSrc" :alt="name">
+    <div class="card-body">
+      <h5 class="card-title">
+        {{ name }}
+      </h5>
+      <p class="card-text text-muted text-nowrap">
+        <font-awesome-icon icon="barcode" />&nbsp;{{ barcode }}
+      </p>
+    </div>
+  </button>
 </template>
 
 <script>
-module.exports = {
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faBarcode } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+library.add(faBarcode)
+
+export default {
+  components: {
+    FontAwesomeIcon
+  },
   props: ['name', 'imgSrc', 'barcode']
 }
 </script>
