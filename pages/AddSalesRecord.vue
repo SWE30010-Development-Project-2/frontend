@@ -11,7 +11,7 @@
           </b-form-row>
           <b-row>
             <b-col v-for="product in products" :key="product.name" cols="2">
-              <product :name="product.name" :img-src="product.img" :barcode="product.name" @click="addItem(product.name)" />
+              <product :name="product.name" :img-src="product.img" :barcode="product.barcode" @click="addItem(product.name)" />
             </b-col>
           </b-row>
         </b-col>
