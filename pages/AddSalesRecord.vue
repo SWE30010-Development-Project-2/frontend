@@ -35,6 +35,7 @@ import AddedItem from '~/components/AddedItem.vue'
 export default {
   components: {
     Product, Navbar, AddedItem
-  }
+  },
+  layout: 'default'
 }
 </script>
