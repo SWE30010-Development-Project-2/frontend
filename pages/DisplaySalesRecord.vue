@@ -157,6 +157,19 @@
       <!-- Info modal -->
       <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
         <pre>{{ infoModal.content }}</pre>
+        <!-- <b-row class="pb-1 pt-1 align-items-center">
+          <b-col cols="4">
+            {{ sales }} x {{ name }}
+          </b-col>
+          <b-col cols="4">
+            <number v-model="sales" @input="$emit('update-qty',sales)" />
+          </b-col>
+          <b-col cols="4" class="text-right">
+            <b-button variant="outline-danger" class="w-100 text-nowrap" @click="$emit('deleteItem',index)">
+              <font-awesome-icon icon="trash-alt" /> Remove
+            </b-button>
+          </b-col>
+        </b-row>   -->
       </b-modal>
     </b-container>
   </div>
@@ -230,6 +243,7 @@
         this.totalRows = filteredItems.length
         this.currentPsales = 1
       }
+
     }
   }
 </script>
