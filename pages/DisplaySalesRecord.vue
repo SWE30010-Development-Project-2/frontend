@@ -4,7 +4,7 @@
 
 <template>
   <div>
-    <navbar title="Add Sales Record Psales" />
+    <navbar title="Add price Record Pprice" />
     <div class="links">
       <a
         href=""
@@ -86,83 +86,87 @@
           </b-form-group>
         </b-col>
 
-        <b-col sm="5" md="6" class="my-1">
+        <!--    <b-col sm="5" md="6" class="my-1">
           <b-form-group
-            label="Per psales"
+            label="Per pprice"
             label-cols-sm="6"
             label-cols-md="4"
             label-cols-lg="3"
             label-align-sm="right"
             label-size="sm"
-            label-for="perPsalesSelect"
+            label-for="perPpriceSelect"
             class="mb-0"
           >
             <b-form-select
-              id="perPsalesSelect"
-              v-model="perPsales"
+              id="perPpriceSelect"
+              v-model="perPprice"
               size="sm"
-              :options="psalesOptions"
+              :options="ppriceOptions"
             />
           </b-form-group>
         </b-col>
 
         <b-col sm="7" md="6" class="my-1">
           <b-pagination
-            v-model="currentPsales"
+            v-model="currentPprice"
             :total-rows="totalRows"
-            :per-psales="perPsales"
+            :per-p-price="perPprice"
             align="fill"
             size="sm"
             class="my-0"
           />
         </b-col>
-      </b-row>
+      </b-row> -->
 
-      <!-- Main table element -->
-      <b-table
-        show-empty
-        small
-        stacked="md"
-        :items="items"
-        :fields="fields"
-        :current-psales="currentPsales"
-        :per-psales="perPsales"
-        :filter="filter"
-        :filter-included-fields="filterOn"
-        :sort-by.sync="sortBy"
-        :sort-desc.sync="sortDesc"
-        :sort-direction="sortDirection"
-        @filtered="onFiltered"
-      >
-        <template v-slot:cell(actions)="row">
-          <b-button size="sm" class="mr-1" @click="info(row.item, row.index, $event.target)">
-            Edit
-          </b-button>
-          <b-button size="sm" @click="row.toggleDetails">
-            Delete
-          </b-button>
-        </template>
+        <!-- Main table element -->
+        <b-table
+          show-empty
+          small
+          stacked="md"
+          :items="items"
+          :fields="fields"
+          :current-p-price="currentPprice"
+          :per-p-price="perPprice"
+          :filter="filter"
+          :filter-included-fields="filterOn"
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+          :sort-direction="sortDirection"
+          @filtered="onFiltered"
+        >
+          <template v-slot:cell(price)="row">
+            $ {{ row.value.cost }}
+          </template>
 
-        <template v-slot:row-details="row">
-          <b-card>
-            <ul>
-              <li v-for="(value, key) in row.item" :key="key">
-                {{ key }}: {{ value }}
-              </li>
-            </ul>
-          </b-card>
-        </template>
-      </b-table>
+          <template v-slot:cell(actions)="row">
+            <b-button size="sm" class="mr-1" @click="info(row.item, row.index, $event.target)">
+              Edit
+            </b-button>
+            <b-button size="sm" @click="row.toggleDetails">
+              Delete
+            </b-button>
+          </template>
 
-      <!-- Info modal -->
-      <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
-        <pre>{{ infoModal.content }}</pre>
+          <template v-slot:row-details="row">
+            <b-card>
+              <ul>
+                <li v-for="(value, key) in row.item" :key="key">
+                  {{ key }}: {{ value }}
+                </li>
+              </ul>
+            </b-card>
+          </template>
+        </b-table>
+
+        <!-- Info modal -->
+        <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
+          <pre>{{ infoModal.content }}</pre>
         <!-- <b-row class="pb-1 pt-1 align-items-center">
           <b-col cols="4">
-            {{ sales }} x {{ name }}
+            {{ price }} x {{ Items }}
           </b-col>
           <b-col cols="4">
-            <number v-model="sales" @input="$emit('update-qty',sales)" />
+            <number v-model="price" @input="$emit('update-qty',price)" />
           </b-col>
           <b-col cols="4" class="text-right">
             <b-button variant="outline-danger" class="w-100 text-nowrap" @click="$emit('deleteItem',index)">
@@ -170,7 +174,8 @@
             </b-button>
           </b-col>
         </b-row>   -->
-      </b-modal>
+        </b-modal>
+      </b-row>
     </b-container>
   </div>
 </template>
@@ -180,29 +185,29 @@
     data() {
       return {
         items: [
-          {  sales: 40, name: 'Xanax' },
-          {  sales: 21, name: 'Cocaine' },
-          { sales: 9,name: 'Glucophage'},
-          {  sales: 89, name: 'GHB' },
-          {  sales: 38, name: 'Vicodin' },
-          {  sales: 27, name: 'Lipitor' },
-          {  sales: 40, name: 'Zofran' },
-          {sales: 87,name: 'Panadol' },
-          {  sales: 26, name: 'Amoxil' },
-          {  sales: 22, name: 'Delasone' },
-          {  sales: 38, name: 'Neurontin' },
-          {  sales: 29, name: 'Prinivil' }
+          {  price: {cost:40}, Items: 'Xanax,Cocaine', time: '21-06-19 : 12:06' },
+          {  price: {cost:40}, Items: 'Cocaine', time: '21-06-19 : 12:06' },
+          { price: {cost:40},Items: 'Glucophage', time: '21-06-19 : 12:06'},
+          {  price: {cost:40}, Items: 'GHB', time: '21-06-19 : 12:06' },
+          {  price: {cost:40}, Items: 'Vicodin', time: '21-06-19 : 12:06' },
+          {  price: {cost:40}, Items: 'Lipitor', time: '21-06-19 : 12:06' },
+          {  price: {cost:40}, Items: 'Zofran', time: '21-06-19 : 12:06' },
+          {price: {cost:40}, Items: 'Panadol', time: '21-06-19 : 12:06' },
+          {  price: {cost:40}, Items: 'Amoxil', time: '21-06-19 : 12:06' },
+          { price: {cost:40}, Items: 'Delasone', time: '21-06-19 : 12:06' },
+          {  price: {cost:40}, Items: 'Neurontin', time: '21-06-19 : 12:06' },
+          {  price: {cost:40}, Items: 'Prinivil', time: '21-06-19 : 12:06' }
         ],
         fields: [
-          { key: 'name', label: 'Product Name', sortable: true, sortDirection: 'desc' },
           { key: 'time', label: 'Time of Sale', sortable: true, class: 'text-center' },
-          { key: 'oof', label: 'oof', sortable: true},
+          { key: 'Items', label: 'Items purchased', sortable: true, sortDirection: 'desc' },
+          { key: 'price', label: 'Cost of Sale', sortable: true},
           { key: 'actions', label: 'Actions' }
         ],
         totalRows: 1,
-        currentPsales: 1,
-        perPsales: 5,
-        psalesOptions: [5, 10, 15],
+        currentPprice: 1,
+        perPprice: 5,
+        ppriceOptions: [5, 10, 15],
         sortBy: '',
         sortDesc: false,
         sortDirection: 'asc',
@@ -211,7 +216,8 @@
         infoModal: {
           id: 'info-modal',
           title: '',
-          content: ''
+          content: '',
+          money: '$',
         }
       }
     },
@@ -240,9 +246,9 @@
         this.infoModal.content = ''
       },
       onFiltered(filteredItems) {
-        // Trigger pagination to update the number of buttons/psaless due to filtering
+        // Trigger pagination to update the number of buttons/pprices due to filtering
         this.totalRows = filteredItems.length
-        this.currentPsales = 1
+        this.currentPprice = 1
       }
 
     }
@@ -252,7 +258,7 @@
 <style>
 #Input {
   background-position: 10px 12px; /* Position the search icon */
-  background-repeat: no-repeat; /* Do not repeat the icon imsales */
+  background-repeat: no-repeat; /* Do not repeat the icon imprice */
   width: 50%; /* Full-width */
   font-size: 16px; /* Increase font-size */
   padding: 12px 20px 12px 40px; /* Add some padding */
