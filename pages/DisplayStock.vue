@@ -195,8 +195,7 @@
         ],
         fields: [
           { key: 'name', label: 'Product Name', sortable: true, sortDirection: 'desc' },
-          { key: 'time', label: 'Time of Sale', sortable: true, class: 'text-center' },
-          { key: 'oof', label: 'oof', sortable: true},
+          { key: 'sales', label: 'Sales No', sortable: true, class: 'text-center' },
           { key: 'actions', label: 'Actions' }
         ],
         totalRows: 1,
