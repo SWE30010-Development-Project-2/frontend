@@ -5,29 +5,17 @@
 <template>
   <div>
     <navbar title="Display Sales Record Page" />
-    <navbar title="Add price Record Pprice" />
     <div class="links">
-      <a
-        href=""
-        target="_blank"
-        class="button--green"
-      >
+      <b-button>
         Today
-      </a>
-      <a
-        href=""
-        target="_blank"
-        class="button--grey"
-      >
+      </b-button>
+      <b-button>
         Past Week
-      </a>
-      <a
-        href=""
-        target="_blank"
-        class="button--grey"
-      >
+      </b-button>
+      <b-button>
         Past year
-      </a>
+      </b-button>
+      </b>
     </div>
 
     <b-container fluid>
@@ -182,7 +170,11 @@
 </template>
 
 <script>
+import Navbar from '~/components/Navbar.vue'
   export default {
+      components: {
+    Navbar
+  },
     data() {
       return {
         items: [
@@ -247,6 +239,11 @@
         this.infoModal.content = ''
       },
       onFiltered(filteredItems) {
+        // Trigger pagination to update the number of buttons/pprices due to filtering
+        this.totalRows = filteredItems.length
+        this.currentPprice = 1
+      },
+      DateFiltered(filteredItems) {
         // Trigger pagination to update the number of buttons/pprices due to filtering
         this.totalRows = filteredItems.length
         this.currentPprice = 1
