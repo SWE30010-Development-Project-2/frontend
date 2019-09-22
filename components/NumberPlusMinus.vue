@@ -12,13 +12,18 @@
     <b-button variant="outline-dark" class="w-50" @click="incr()">
       +
     </b-button>
-    </b-form-input>
   </b-button-group>
 </template>
 
 <script>
 export default {
-  props: ['value'],
+  props: {
+    title: {
+      type: Number,
+      default: 0,
+      required: true
+    }
+  },
   methods: {
     incr () {
       this.value++

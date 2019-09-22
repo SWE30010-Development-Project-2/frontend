@@ -26,6 +26,22 @@ export default {
     Number,
     FontAwesomeIcon
   },
-  props: ['name', 'quantity', 'index']
+  props: {
+    name: {
+      type: String,
+      default: '',
+      required: true
+    },
+    quantity: {
+      type: Number,
+      default: 0,
+      required: true
+    },
+    index: {
+      type: Number,
+      default: -1,
+      required: true
+    }
+  }
 }
 </script>

@@ -22,6 +22,22 @@ export default {
   components: {
     FontAwesomeIcon
   },
-  props: ['name', 'imgSrc', 'barcode']
+  props: {
+    name: {
+      type: String,
+      default: null,
+      required: true
+    },
+    imgSrc: {
+      type: String,
+      default: null,
+      required: true
+    },
+    barcode: {
+      type: String,
+      default: null,
+      required: true
+    }
+  }
 }
 </script>
