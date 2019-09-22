@@ -1,7 +1,7 @@
 <template>
   <div>
-    <!-- <navbar title="Add Sales Record Page" /> -->
-    <b-container>
+    <navbar title="Login Page" />
+    <b-container class="mv-0">
       <div class="card" style="width: 18rem;">
         <img src="/images/logo.png" class="card-img-top" alt="PHP LOGO">
         <div class="card-body">
@@ -9,6 +9,7 @@
             <b-form-group id="user_id_group" label="User ID: " label-for="user_id">
               <b-form-input
                 id="user_id"
+                type="text"
                 required
                 placeholder="Enter User ID"
               />
@@ -16,6 +17,7 @@
             <b-form-group id="password_group" label="Password: " label-for="password">
               <b-form-input
                 id="password"
+                type="password"
                 required
                 placeholder="Enter Password"
               />
@@ -36,30 +38,24 @@
 
 <style>
 .container {
-  margin: 0 auto;
-  min-height: 100vh;
   display: flex;
   align-items: center;
+  min-height: 100vh;
 }
 .card {
-        margin: 0 auto; /* Added */
-        float: none; /* Added */
-        margin-bottom: 10px; /* Added */
+        margin: 0 auto;
+        float: none;
+        margin-bottom: 10px;
         border: none;
 }
 </style>
 
 <script>
-// import Navbar from '~/components/Navbar.vue'
-// import { library } from '@fortawesome/fontawesome-svg-core'
-// import { faBandAid } from '@fortawesome/free-solid-svg-icons'
-// import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-// library.add(faBandAid)
+import Navbar from '~/components/Navbar.vue'
 
 export default {
   components: {
-    // FontAwesomeIcon
-  //   Navbar
+    Navbar
   },
   layout: 'default'
 }

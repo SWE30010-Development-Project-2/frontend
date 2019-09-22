@@ -4,6 +4,7 @@
 
 <template>
   <div>
+    <navbar title="Display Sales Record Page" />
     <navbar title="Add price Record Pprice" />
     <div class="links">
       <a
