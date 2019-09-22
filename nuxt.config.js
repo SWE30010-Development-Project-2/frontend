@@ -31,6 +31,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/vue-overlay'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -45,15 +46,20 @@ module.exports = {
   modules: [
     // Doc: https://bootstrap-vue.js.org/docs/
     'bootstrap-vue/nuxt',
-    // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/apollo',
+    '@nuxtjs/moment'
   ],
-  /*
-  ** Axios module configuration
-  ** See https://axios.nuxtjs.org/options
-  */
-  axios: {
+
+  apollo: {
+    tokenName: 'access-token',
+    authenticationType: 'Bearer',
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'http://localhost:9000/graphql'
+      }
+    }
   },
+
   /*
   ** Build configuration
   */
