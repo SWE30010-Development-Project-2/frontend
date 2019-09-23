@@ -108,14 +108,16 @@
       </b-row> -->
 
         <!-- Main table element -->
+
+        <!-- Main table element -->
         <b-table
           show-empty
           small
           stacked="md"
           :items="items"
           :fields="fields"
-          :current-p-price="currentPprice"
-          :per-p-price="perPprice"
+          :current-psales="currentPsales"
+          :per-psales="perPsales"
           :filter="filter"
           :filter-included-fields="filterOn"
           :sort-by.sync="sortBy"
@@ -127,41 +129,14 @@
             $ {{ row.value.cost }}
           </template>
 
-<<<<<<< HEAD
-      <!-- Main table element -->
-      <b-table
-        show-empty
-        small
-        stacked="md"
-        :items="items"
-        :fields="fields"
-        :current-psales="currentPsales"
-        :per-psales="perPsales"
-        :filter="filter"
-        :filter-included-fields="filterOn"
-        :sort-by.sync="sortBy"
-        :sort-desc.sync="sortDesc"
-        :sort-direction="sortDirection"
-        @filtered="onFiltered"
-      >
-        <template v-slot:cell(actions)="row">
-          <b-button size="sm" class="mr-1" @click="info(row.item, row.item.sales, $event.target)">
-            Edit
-          </b-button>
-          <b-button size="sm" @click="row.toggleDetails">
-            Delete
-          </b-button>
-        </template>
-=======
           <template v-slot:cell(actions)="row">
-            <b-button size="sm" class="mr-1" @click="info(row.item, row.index, $event.target)">
+            <b-button size="sm" class="mr-1" @click="info(row.item, row.item.sales, $event.target)">
               Edit
             </b-button>
             <b-button size="sm" @click="row.toggleDetails">
               Delete
             </b-button>
           </template>
->>>>>>> cff3df3e5b7c0a9633472ee9e32a521597ba0841
 
           <template v-slot:row-details="row">
             <b-card>
@@ -177,7 +152,7 @@
         <!-- Info modal -->
         <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
           <pre>{{ infoModal.content }}</pre>
-        <!-- <b-row class="pb-1 pt-1 align-items-center">
+          <!-- <b-row class="pb-1 pt-1 align-items-center">
           <b-col cols="4">
             {{ price }} x {{ Items }}
           </b-col>
@@ -191,6 +166,7 @@
           </b-col>
         </b-row>   -->
         </b-modal>
+        </b-table>
       </b-row>
     </b-container>
   </div>
