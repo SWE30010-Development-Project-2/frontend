@@ -135,7 +135,7 @@
         @filtered="onFiltered"
       >
         <template v-slot:cell(actions)="row">
-          <b-button size="sm" class="mr-1" @click="info(row.item, row.index, $event.target)">
+          <b-button size="sm" class="mr-1" @click="info(row.item, row.item.sales, $event.target)">
             Edit
           </b-button>
           <b-button size="sm" @click="row.toggleDetails">
@@ -230,7 +230,7 @@
     },
     methods: {
       info(item, index, button) {
-        this.infoModal.title = `Row index: ${index}`
+        this.infoModal.title = `Sale Number: ${index}`
         this.infoModal.content = JSON.stringify(item, null, 2)
         this.$root.$emit('bv::show::modal', this.infoModal.id, button)
       },
