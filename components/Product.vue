@@ -1,6 +1,7 @@
 <template>
   <button class="card mb-3 px-0" @click="$emit('click')">
-    <img class="card-img-top" :src="imgSrc" :alt="name">
+    <!-- <img class="card-img-top" :src="imgSrc" :alt="name"> -->
+    <b-img :src="imgSrc" :alt="name" fluid />
     <div class="card-body">
       <h5 class="card-title">
         {{ name }}
