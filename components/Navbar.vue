@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" variant="dark">
+  <b-navbar toggleable="lg" type="dark" variant="dark" sticky>
     <b-navbar-brand href="#">
       {{ title }}
     </b-navbar-brand>
@@ -22,6 +22,12 @@
     </b-navbar-nav>
   </b-navbar>
 </template>
+
+<style lang="scss" scoped>
+.navbar {
+  height: 3.5rem;
+}
+</style>
 
 <script>
 export default {

@@ -50,8 +50,9 @@ module.exports = {
     '@nuxtjs/moment'
   ],
   bootstrapVue: {
-    bootstrapCSS: false, // Or `css: false`
-    bootstrapVueCSS: false // Or `bvCSS: false`
+    // Because we have our own custom scss, we don't want duplicates.
+    bootstrapCSS: false,
+    bootstrapVueCSS: false
   },
 
   apollo: {

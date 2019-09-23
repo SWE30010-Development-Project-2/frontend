@@ -6,7 +6,7 @@
     <b-col cols="auto">
       <span class="d-inline"><number v-model="quantity" @input="$emit('update-qty',quantity)" /></span>
       <span class="d-inline"><b-button variant="outline-danger" class="text-nowrap" @click="$emit('deleteItem',index)">
-        <font-awesome-icon icon="trash-alt" /><span class="d-none d-lg-inline">&nbsp;Remove</span>
+        <font-awesome-icon icon="trash-alt" /><span class="d-none d-xl-inline">&nbsp;Remove</span>
       </b-button></span>
     </b-col>
   </b-row>

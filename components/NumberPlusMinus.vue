@@ -5,7 +5,7 @@
     </b-button>
     <b-form-input
       :value="value"
-      class="rounded-0 text-center d-none d-lg-inline"
+      class="rounded-0 text-center d-none d-xl-inline"
       style="width:38px"
       @input="update()"
     />

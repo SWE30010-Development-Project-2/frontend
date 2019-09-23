@@ -3,7 +3,7 @@
     <navbar title="Add Sales Record Page" />
     <b-container fluid>
       <b-row>
-        <b-col cols="8">
+        <b-col cols="8" class="products">
           <b-form-row class="pt-3 pb-3">
             <b-col>
               <b-form-input v-model="search" :type="search" placeholder="Search Products or Enter Barcode" />
@@ -15,18 +15,44 @@
             </b-col>
           </b-row>
         </b-col>
-        <b-col cols="4" class="bg-light">
-          <h2 class="h3 align-items-center border-bottom pt-3 pb-3 mb-3">
+        <b-col cols="4" class="sidebar bg-light">
+          <h2 class="h3 align-items-center border-bottom pt-3 pb-3 text-nowrap">
             Added items
           </h2>
-          <div v-for="(item, index) in items" :key="index">
-            <added-item :quantity="item.qty" :name="item.name" :index="index" @update-qty="item.qty=$event" @deleteItem="items.splice(index, 1)" />
+          <div class="added-items-list pt-3 pb-3">
+            <div v-for="(item, index) in items" :key="index">
+              <added-item :quantity="item.qty" :name="item.name" :index="index" @update-qty="item.qty=$event" @deleteItem="items.splice(index, 1)" />
+            </div>
+          </div>
+          <div class="align-items-center border-top pt-3 pb-3">
+            <b-button variant="primary" class="text-nowrap w-100">
+              Record Sale
+            </b-button>
           </div>
         </b-col>
       </b-row>
     </b-container>
   </div>
 </template>
+
+<style lang="scss">
+.products {
+  min-height: calc(100vh - 3.5rem);
+}
+.sidebar {
+  position: fixed;
+  top: 3.5rem;
+  right: 0;
+  height: calc(100vh - 3.5rem);
+}
+.added-items-list{
+  height: calc(100% - 9rem )
+}
+
+html {
+  overflow-y: scroll; // Always display scroll bar
+}
+</style>
 
 <script>
 import Product from '~/components/Product.vue'
@@ -47,7 +73,11 @@ export default {
         { name: 'Xanax', img: '/images/xanax.jpg', barcode: '124454444333' },
         { name: 'Glucophage', img: '/images/placeholder.jpg', barcode: '454943112345' },
         { name: 'Amoxil', img: '/images/placeholder.jpg', barcode: '000000000112' },
-        { name: 'Lipitor', img: '/images/placeholder.jpg', barcode: '000333300112' }
+        { name: 'Lipitor', img: '/images/placeholder.jpg', barcode: '000333300112' },
+        { name: 'Zofran', img: '/images/placeholder.jpg', barcode: '069693808812' },
+        { name: 'Panadol', img: '/images/placeholder.jpg', barcode: '777788880000' },
+        { name: 'Vicodin', img: '/images/placeholder.jpg', barcode: '555500226688' },
+        { name: 'Neurontin', img: '/images/placeholder.jpg', barcode: '556600225656' }
       ],
       search: ''
     }
