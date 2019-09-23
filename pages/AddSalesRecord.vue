@@ -19,7 +19,7 @@
           <h2 class="h3 align-items-center border-bottom pt-3 pb-3 mb-3">
             Added items
           </h2>
-          <div v-for="(item, index) in items" :key="item.index">
+          <div v-for="(item, index) in items" :key="index">
             <added-item :quantity="item.qty" :name="item.name" :index="index" @update-qty="item.qty=$event" @deleteItem="items.splice(index, 1)" />
           </div>
         </b-col>

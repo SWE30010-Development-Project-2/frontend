@@ -18,9 +18,9 @@
 <script>
 export default {
   props: {
-    title: {
+    value: {
       type: Number,
-      default: 0,
+      default: 1,
       required: true
     }
   },
