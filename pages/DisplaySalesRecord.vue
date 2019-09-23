@@ -6,7 +6,7 @@
   <div>
     <navbar title="Display Sales Record Page" />
     <div class="links">
-      <b-button>
+      <b-button v-model="today" @click="DateFiltered">
         Today
       </b-button>
       <b-button>
@@ -120,6 +120,7 @@
           :per-psales="perPsales"
           :filter="filter"
           :filter-included-fields="filterOn"
+          :today="today"
           :sort-by.sync="sortBy"
           :sort-desc.sync="sortDesc"
           :sort-direction="sortDirection"
@@ -169,6 +170,7 @@
         </b-table>
       </b-row>
     </b-container>
+    <h2>{{ today }}</h2>
   </div>
 </template>
 
@@ -181,23 +183,24 @@ import Navbar from '~/components/Navbar.vue'
     data() {
       return {
         items: [
-          {  price: {cost:40}, Items: 'Xanax,Cocaine', time: '21-06-19 : 12:06' },
-          {  price: {cost:40}, Items: 'Cocaine', time: '21-06-19 : 12:06' },
-          { price: {cost:40},Items: 'Glucophage', time: '21-06-19 : 12:06'},
-          {  price: {cost:40}, Items: 'GHB', time: '21-06-19 : 12:06' },
-          {  price: {cost:40}, Items: 'Vicodin', time: '21-06-19 : 12:06' },
-          {  price: {cost:40}, Items: 'Lipitor', time: '21-06-19 : 12:06' },
-          {  price: {cost:40}, Items: 'Zofran', time: '21-06-19 : 12:06' },
-          {price: {cost:40}, Items: 'Panadol', time: '21-06-19 : 12:06' },
-          {  price: {cost:40}, Items: 'Amoxil', time: '21-06-19 : 12:06' },
-          { price: {cost:40}, Items: 'Delasone', time: '21-06-19 : 12:06' },
-          {  price: {cost:40}, Items: 'Neurontin', time: '21-06-19 : 12:06' },
-          {  price: {cost:40}, Items: 'Prinivil', time: '21-06-19 : 12:06' }
+          {TransactionNo: '1',  price: {cost:40}, NoItems: 6, time: '23/09/2019 : 11:05' },
+          {TransactionNo: '2',  price: {cost:40}, NoItems: 4, time: '23/09/2019 : 12:06' },
+          {TransactionNo: '3', price: {cost:40},NoItems: 1, time: '23/09/2019 : 12:06'},
+          {TransactionNo: '4',  price: {cost:40}, NoItems: 1, time: '20/09/2019 : 12:06' },
+          {TransactionNo: '5',  price: {cost:40}, NoItems: 1, time: '20/09/2019 : 12:06' },
+          {TransactionNo: '6',  price: {cost:40}, NoItems: 7, time: '23/09/2019 : 12:06' },
+          {TransactionNo: '7',  price: {cost:40}, NoItems: 8, time: '21/09/2019 : 12:06' },
+          {TransactionNo: '8',price: {cost:40}, NoItems: 99, time: '23/09/2019 : 12:06' },
+          {TransactionNo: '9',  price: {cost:40}, NoItems: 100, time: '23/09/2019 : 12:06' },
+          {TransactionNo: '10', price: {cost:40}, NoItems: 5000, time: '22/09/2019 : 12:06' },
+          {TransactionNo: '11',  price: {cost:40}, NoItems: 69, time: '21/09/2019 : 12:06' },
+          {TransactionNo: '12',  price: {cost:40}, NoItems: 59, time: '21/09/2019 : 12:06', }
         ],
         fields: [
+          { key: 'TransactionNo', label: 'Transaction Code'},
           { key: 'time', label: 'Time of Sale', sortable: true, class: 'text-center' },
-          { key: 'Items', label: 'Items purchased', sortable: true, sortDirection: 'desc' },
-          { key: 'price', label: 'Cost of Sale', sortable: true},
+          { key: 'NoItems', label: 'No of Items', sortable: true, sortDirection: 'desc' },
+          { key: 'price', label: 'Cost of Sale', sortable: true, sortDirection: 'desc' },
           { key: 'actions', label: 'Actions' }
         ],
         totalRows: 1,
@@ -209,6 +212,7 @@ import Navbar from '~/components/Navbar.vue'
         sortDirection: 'asc',
         filter: null,
         filterOn: [],
+        today: '',
         infoModal: {
           id: 'info-modal',
           title: '',
@@ -246,10 +250,13 @@ import Navbar from '~/components/Navbar.vue'
         this.totalRows = filteredItems.length
         this.currentPprice = 1
       },
-      DateFiltered(filteredItems) {
-        // Trigger pagination to update the number of buttons/pprices due to filtering
-        this.totalRows = filteredItems.length
-        this.currentPprice = 1
+      DateFiltered() {
+        var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
+this.today = dd + '/' + mm + '/' + yyyy;
+this.filter = this.today
       }
 
     }
