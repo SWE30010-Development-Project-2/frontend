@@ -108,14 +108,16 @@
       </b-row> -->
 
         <!-- Main table element -->
+
+        <!-- Main table element -->
         <b-table
           show-empty
           small
           stacked="md"
           :items="items"
           :fields="fields"
-          :current-p-price="currentPprice"
-          :per-p-price="perPprice"
+          :current-psales="currentPsales"
+          :per-psales="perPsales"
           :filter="filter"
           :filter-included-fields="filterOn"
           :sort-by.sync="sortBy"
@@ -128,7 +130,7 @@
           </template>
 
           <template v-slot:cell(actions)="row">
-            <b-button size="sm" class="mr-1" @click="info(row.item, row.index, $event.target)">
+            <b-button size="sm" class="mr-1" @click="info(row.item, row.item.sales, $event.target)">
               Edit
             </b-button>
             <b-button size="sm" @click="row.toggleDetails">
@@ -150,7 +152,7 @@
         <!-- Info modal -->
         <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
           <pre>{{ infoModal.content }}</pre>
-        <!-- <b-row class="pb-1 pt-1 align-items-center">
+          <!-- <b-row class="pb-1 pt-1 align-items-center">
           <b-col cols="4">
             {{ price }} x {{ Items }}
           </b-col>
@@ -164,6 +166,7 @@
           </b-col>
         </b-row>   -->
         </b-modal>
+        </b-table>
       </b-row>
     </b-container>
   </div>
@@ -230,7 +233,7 @@ import Navbar from '~/components/Navbar.vue'
     },
     methods: {
       info(item, index, button) {
-        this.infoModal.title = `Row index: ${index}`
+        this.infoModal.title = `Sale Number: ${index}`
         this.infoModal.content = JSON.stringify(item, null, 2)
         this.$root.$emit('bv::show::modal', this.infoModal.id, button)
       },
