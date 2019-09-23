@@ -49,6 +49,10 @@ module.exports = {
     '@nuxtjs/apollo',
     '@nuxtjs/moment'
   ],
+  bootstrapVue: {
+    bootstrapCSS: false, // Or `css: false`
+    bootstrapVueCSS: false // Or `bvCSS: false`
+  },
 
   apollo: {
     tokenName: 'access-token',
