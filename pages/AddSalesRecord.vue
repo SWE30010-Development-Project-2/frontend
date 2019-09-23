@@ -6,11 +6,14 @@
         <b-col cols="8">
           <b-form-row class="pt-3 pb-3">
             <b-col>
-              <b-form-input :type="search" placeholder="Search Products or Enter Barcode" />
+              <b-form-input v-model="search" :type="search" placeholder="Search Products or Enter Barcode" />
             </b-col>
           </b-form-row>
           <b-row>
-            <b-col v-for="product in products" :key="product.name" cols="2">
+            <!-- <b-col v-for="product in products" :key="product.name" cols="2">
+              <product :name="product.name" :img-src="product.img" :barcode="product.barcode" @click="addItem(product.name)" />
+            </b-col> -->
+            <b-col v-for="product in filteredProducts" :key="product.name" cols="2">
               <product :name="product.name" :img-src="product.img" :barcode="product.barcode" @click="addItem(product.name)" />
             </b-col>
           </b-row>
@@ -45,7 +48,20 @@ export default {
         { name: 'Paracetamol', img: '/images/paracetamol.jpg', barcode: '1244534534' },
         { name: 'Sambucol', img: '/images/sambucol.jpg', barcode: '1244999534' },
         { name: 'Xanax', img: '/images/xanax.jpg', barcode: '124454444' }
-      ]
+      ],
+      search: ''
+    }
+  },
+  computed: {
+    filteredProducts () {
+      return this.products.filter((product) => {
+        const name = product.name.toLowerCase()
+        const barcode = product.barcode.toLowerCase()
+        const search = this.search.toLowerCase()
+
+        return name.includes(search) || barcode.includes(search) ||
+        search.includes(name) || search.includes(barcode)
+      })
     }
   },
   methods: {
