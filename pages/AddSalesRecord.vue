@@ -10,10 +10,7 @@
             </b-col>
           </b-form-row>
           <b-row>
-            <!-- <b-col v-for="product in products" :key="product.name" cols="2">
-              <product :name="product.name" :img-src="product.img" :barcode="product.barcode" @click="addItem(product.name)" />
-            </b-col> -->
-            <b-col v-for="product in filteredProducts" :key="product.name" cols="2">
+            <b-col v-for="product in filteredProducts" :key="product.name" cols="4" lg="3">
               <product :name="product.name" :img-src="product.img" :barcode="product.barcode" @click="addItem(product.name)" />
             </b-col>
           </b-row>
@@ -45,9 +42,12 @@ export default {
     return {
       items: [],
       products: [
-        { name: 'Paracetamol', img: '/images/paracetamol.jpg', barcode: '1244534534' },
-        { name: 'Sambucol', img: '/images/sambucol.jpg', barcode: '1244999534' },
-        { name: 'Xanax', img: '/images/xanax.jpg', barcode: '124454444' }
+        { name: 'Paracetamol', img: '/images/paracetamol.jpg', barcode: '931001244534' },
+        { name: 'Sambucol', img: '/images/sambucol.jpg', barcode: '124499953403' },
+        { name: 'Xanax', img: '/images/xanax.jpg', barcode: '124454444333' },
+        { name: 'Glucophage', img: '/images/placeholder.jpg', barcode: '454943112345' },
+        { name: 'Amoxil', img: '/images/placeholder.jpg', barcode: '000000000112' },
+        { name: 'Lipitor', img: '/images/placeholder.jpg', barcode: '000333300112' }
       ],
       search: ''
     }

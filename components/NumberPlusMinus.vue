@@ -1,15 +1,16 @@
 <template>
   <b-button-group>
-    <b-button variant="outline-dark" class="w-50" @click="decr()">
+    <b-button variant="outline-dark" style="width:38px;" @click="decr()">
       −
     </b-button>
     <b-form-input
       :value="value"
-      class="w-50 rounded-0 text-center"
+      class="rounded-0 text-center d-none d-lg-inline"
+      style="width:38px"
       @input="update()"
     />
 
-    <b-button variant="outline-dark" class="w-50" @click="incr()">
+    <b-button variant="outline-dark" style="width:38px" @click="incr()">
       +
     </b-button>
   </b-button-group>
