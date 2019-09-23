@@ -1,0 +1,9 @@
+query($email: String!, $password: String!) {
+  authenticate(email: $email, password: $password) {
+    token
+    user {
+      email
+      username
+    }
+  }
+}

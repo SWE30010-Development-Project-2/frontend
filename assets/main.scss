@@ -1,0 +1,17 @@
+// Variable overrides
+// Colours
+$theme-colors: (
+  "primary": #3b8070,
+);
+$body-color: #343a40;
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans&display=swap');
+$font-family-sans-serif:    "Noto Sans", sans-serif, Arial, "Noto Color Emoji";                            
+
+// Import Bootstrap
+@import '../node_modules/bootstrap/scss/bootstrap';
+@import '../node_modules/bootstrap-vue/src/index.scss';
+
+
+// Additional global CSS
