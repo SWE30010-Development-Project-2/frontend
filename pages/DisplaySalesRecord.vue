@@ -131,7 +131,7 @@
           </template>
 
           <template v-slot:cell(actions)="row">
-            <b-button size="sm" class="mr-1" @click="info(row.item, row.item.sales, $event.target)">
+            <b-button size="sm" class="mr-1" @click="info(row.item, row.item, $event.target)">
               Edit
             </b-button>
             <b-button size="sm" @click="row.toggleDetails">
@@ -152,6 +152,10 @@
 
         <!-- Info modal -->
         <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
+          <template v-slot:default="{ hide }">
+            <p>{{ infoModal.content[1] }}</p>
+          </template>
+
           <pre>{{ infoModal.content }}</pre>
           <!-- <b-row class="pb-1 pt-1 align-items-center">
           <b-col cols="4">
@@ -217,6 +221,7 @@ import Navbar from '~/components/Navbar.vue'
           id: 'info-modal',
           title: '',
           content: '',
+          TransactionNo: '',
           money: '$',
         }
       }
@@ -237,8 +242,9 @@ import Navbar from '~/components/Navbar.vue'
     },
     methods: {
       info(item, index, button) {
-        this.infoModal.title = `Sale Number: ${index}`
-        this.infoModal.content = JSON.stringify(item, null, 2)
+        this.infoModal.title = item.TransactionNo;
+        this.infoModal.content = item;
+        this.infoModal.TransactionNo = item.TransactionNo;
         this.$root.$emit('bv::show::modal', this.infoModal.id, button)
       },
       resetInfoModal() {
