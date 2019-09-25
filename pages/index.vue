@@ -1,76 +1,65 @@
 <template>
   <div>
-    <navbar title="Home Page" />
+    <navbar title="Home" />
     <div class="container">
-      <div>
-        <logo />
-        <h1 class="title">
-          pharmacy
-        </h1>
-        <h2 class="subtitle">
-          People Health Pharmacy App
-        </h2>
-        <div class="links">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            class="button--green"
-          >
-            Documentation
-          </a>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            class="button--grey"
-          >
-            GitHub
-          </a>
-        </div>
-      </div>
+      <b-row class="pt-5 pb-5">
+        <b-col>
+          <h1 class="display-2 text-center">
+            People's Health Pharmacy
+          </h1>
+          <h2 class="display-4 text-center">
+            Sales Reporting and Prediction System
+          </h2>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <b-button href="/addsalesrecord" variant="outline-primary" class="w-100">
+            <font-awesome-icon icon="plus" class="w-100 mt-4 mb-4 big-icon" />
+            Add Sales Record
+          </b-button>
+        </b-col>
+        <b-col>
+          <b-button href="/displaysalesrecords" variant="outline-dark" class="w-100">
+            <font-awesome-icon icon="receipt" class="w-100 mt-4 mb-4 big-icon" />
+            Display Sales Records
+          </b-button>
+        </b-col>
+        <b-col>
+          <b-button href="/displaystock" variant="outline-primary" class="w-100">
+            <font-awesome-icon icon="capsules" class="w-100 mt-4 mb-4 big-icon" />
+            Display Stock
+          </b-button>
+        </b-col>
+      </b-row>
     </div>
   </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import { faPlus, faCapsules, faReceipt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import Navbar from '~/components/Navbar.vue'
+
+library.add(faPlus)
+library.add(faCapsules)
+library.add(faReceipt)
 
 export default {
   components: {
-    Logo, Navbar
+    Navbar, FontAwesomeIcon
   }
 }
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
+<style lang="scss">
+h1, h2 {
   font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
 }
 
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+.big-icon {
+  font-size: 4rem;
 }
 </style>

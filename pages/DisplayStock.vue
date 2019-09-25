@@ -4,7 +4,7 @@
 
 <template>
   <div>
-    <navbar title="Add Sales Record Psales" />
+    <navbar title="Display Stock" />
     <div class="links">
       <a
         href=""

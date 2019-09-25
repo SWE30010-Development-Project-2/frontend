@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navbar title="Add Sales Record Page" />
+    <navbar title="Add Sales Record" />
     <b-container fluid>
       <b-row>
         <b-col cols="8" class="products">

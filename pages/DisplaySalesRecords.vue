@@ -4,7 +4,7 @@
 
 <template>
   <div>
-    <navbar title="Display Sales Record Page" />
+    <navbar title="Display Sales Record" />
     <div class="links">
       <b-button v-model="today" @click="DateFiltered">
         Today

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navbar title="Login Page" />
+    <navbar title="Login" />
     <b-container ref="loginContainer" class="mv-0">
       <div class="card" style="width: 18rem;">
         <img src="/images/logo.png" class="card-img-top" alt="PHP LOGO"></img>
