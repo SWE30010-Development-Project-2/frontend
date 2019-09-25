@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="align-items-center border-top pt-3 pb-3">
-            <b-button variant="primary" class="text-nowrap w-100">
+            <b-button variant="primary" class="text-nowrap w-100" :disabled="items.length === 0" @click="recordSale()">
               Record Sale
             </b-button>
           </div>
@@ -58,6 +58,7 @@ html {
 import Product from '~/components/Product.vue'
 import Navbar from '~/components/Navbar.vue'
 import AddedItem from '~/components/AddedItem.vue'
+import ItemListText from '~/components/ItemListText.vue'
 
 export default {
   components: {
@@ -102,6 +103,32 @@ export default {
       } else {
         list[0].qty++
       }
+    },
+    recordSale () {
+      // Send to server
+
+      // Display Message
+      this.notifySaleRecorded()
+
+      // Clear list of items
+      this.items = []
+    },
+    notifySaleRecorded () {
+      // Create the message
+      const message = this.$createElement(ItemListText, {
+        props: {
+          items: this.items
+        }
+      })
+
+      // Display the notification
+      this.$bvToast.toast([message], {
+        title: 'Sale Recorded Successfully',
+        autoHideDelay: 2500,
+        appendToast: true,
+        variant: 'primary',
+        solid: true
+      })
     }
   }
 }
