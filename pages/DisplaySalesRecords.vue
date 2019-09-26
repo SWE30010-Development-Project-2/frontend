@@ -1,6 +1,7 @@
 <template>
   <div>
     <!-- Modals -->
+    <!-- Confirm Delete -->
     <b-modal ref="confirm-delete" title="Confirm Delete">
       Are you sure you would like to delete this item?
       <div slot="modal-footer">
@@ -63,7 +64,6 @@
             <b-button size="sm" class="mr-1" @click="info(row.item, row.item, $event.target)">
               Edit
             </b-button>
-            <!-- <b-button size="sm" @click="row.toggleDetails"> -->
             <b-button size="sm" @click="$refs['confirm-delete'].show()">
               Delete
             </b-button>

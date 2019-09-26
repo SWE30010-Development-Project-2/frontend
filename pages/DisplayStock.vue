@@ -1,13 +1,19 @@
 <template>
   <div>
     <!-- Modals -->
-    <b-modal ref="confirm-delete" title="Confirm Delete">
-      Are you sure you would like to delete this item?
+    <!-- Confirm Delete -->
+    <b-modal :ref="confirmDeleteModal.id" title="Confirm Delete">
+      <p>Are you sure you would like to delete this item?</p>
+      <p>
+        <strong>Product Name: </strong>{{ confirmDeleteModal.item.name }}
+        <br>
+        <strong>Sales No: </strong>{{ confirmDeleteModal.item.sales }}
+      </p>
       <div slot="modal-footer">
-        <b-button variant="danger">
+        <b-button variant="danger" @click="deleteRow(confirmDeleteModal.index)">
           Delete
         </b-button>
-        <b-button variant="outline-dark" @click="$refs['confirm-delete'].hide()">
+        <b-button variant="outline-dark" @click="$refs[confirmDeleteModal.id].hide()">
           Cancel
         </b-button>
       </div>
@@ -89,7 +95,7 @@
           <b-button size="sm" class="mr-1" @click="info(row.item, row.index, $event.target)">
             Edit
           </b-button>
-          <b-button size="sm" @click="$refs['confirm-delete'].show()">
+          <b-button size="sm" @click="confirmDeleteRow(row.item, row.index)">
             Delete
           </b-button>
         </template>
@@ -152,6 +158,11 @@ export default {
         id: 'info-modal',
         title: '',
         content: ''
+      },
+      confirmDeleteModal: {
+        id: 'confirm-delete',
+        index: null,
+        item: { sales: 0, name: '' }
       }
     }
   },
@@ -174,6 +185,16 @@ export default {
       this.infoModal.title = `Row index: ${index}`
       this.infoModal.content = JSON.stringify(item, null, 2)
       this.$root.$emit('bv::show::modal', this.infoModal.id, button)
+    },
+    confirmDeleteRow (item, index) {
+      this.confirmDeleteModal.index = index
+      this.confirmDeleteModal.item = item
+      this.$refs[this.confirmDeleteModal.id].show()
+    },
+    deleteRow (index) {
+      this.items.splice(index, 1)
+      // TODO - send delete to server
+      this.$refs[this.confirmDeleteModal.id].hide()
     },
     resetInfoModal () {
       this.infoModal.title = ''
@@ -207,17 +228,7 @@ export default {
 }
 </script>
 
-<style>
-#Input {
-  background-position: 10px 12px; /* Position the search icon */
-  background-repeat: no-repeat; /* Do not repeat the icon imsales */
-  width: 50%; /* Full-width */
-  font-size: 16px; /* Increase font-size */
-  padding: 12px 20px 12px 40px; /* Add some padding */
-  border: 1px solid #ddd; /* Add a grey border */
-  margin-bottom: 12px; /* Add some space below the input */
-
-}
+<style lang="scss">
 .container {
   margin: 0 auto;
   min-height: 100vh;
@@ -225,13 +236,6 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-}
-.links {
-  padding-top: 15px;
-   justify-content: center;
-  align-items: center;
-  text-align: center;
-   margin-bottom: 12px; /* Add some space below the input */
 }
 .table {
     border-collapse: collapse; /* Collapse borders */
