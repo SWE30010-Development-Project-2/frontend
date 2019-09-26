@@ -2,22 +2,13 @@
   <div>
     <!-- Modals -->
     <!-- Confirm Delete -->
-    <b-modal :ref="confirmDeleteModal.id" title="Confirm Delete">
-      <p>Are you sure you would like to delete this item?</p>
-      <p>
-        <strong>Product Name: </strong>{{ confirmDeleteModal.item.name }}
-        <br>
-        <strong>Sales No: </strong>{{ confirmDeleteModal.item.sales }}
-      </p>
-      <div slot="modal-footer">
-        <b-button variant="danger" @click="deleteRow(confirmDeleteModal.index)">
-          Delete
-        </b-button>
-        <b-button variant="outline-dark" @click="$refs[confirmDeleteModal.id].hide()">
-          Cancel
-        </b-button>
-      </div>
-    </b-modal>
+    <confirm-delete-modal
+      id="confirm-delete"
+      :item="confirmDeleteModal.item"
+      :index="confirmDeleteModal.index"
+      :item-property-labels="{ sales: 'Sales No', name: 'Product Name' }"
+      @confirm-deletion="deleteRow(confirmDeleteModal.index)"
+    />
 
     <!-- Info modal -->
     <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
@@ -119,10 +110,11 @@ import Navbar from '~/components/Navbar.vue'
 import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
 import SortControl from '~/components/SortControl.vue'
 import FilterControl from '~/components/FilterControl.vue'
+import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 
 export default {
   components: {
-    Navbar, TimeSelectionButtons, SortControl, FilterControl
+    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal
   },
   data () {
     return {
@@ -160,7 +152,6 @@ export default {
         content: ''
       },
       confirmDeleteModal: {
-        id: 'confirm-delete',
         index: null,
         item: { sales: 0, name: '' }
       }
@@ -187,14 +178,12 @@ export default {
       this.$root.$emit('bv::show::modal', this.infoModal.id, button)
     },
     confirmDeleteRow (item, index) {
-      this.confirmDeleteModal.index = index
-      this.confirmDeleteModal.item = item
-      this.$refs[this.confirmDeleteModal.id].show()
+      this.confirmDeleteModal = { item, index }
+      this.$bvModal.show('confirm-delete')
     },
     deleteRow (index) {
       this.items.splice(index, 1)
       // TODO - send delete to server
-      this.$refs[this.confirmDeleteModal.id].hide()
     },
     resetInfoModal () {
       this.infoModal.title = ''
@@ -230,16 +219,11 @@ export default {
 
 <style lang="scss">
 .container {
-  margin: 0 auto;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 .table {
-    border-collapse: collapse; /* Collapse borders */
-  border: 1px solid #ddd; /* Add a grey border */
+    border-collapse: collapse;
+  border: 1px solid #ddd;
     align-items: center;
     text-align: center;
     justify-content: center;

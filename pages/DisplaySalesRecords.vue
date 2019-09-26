@@ -2,17 +2,13 @@
   <div>
     <!-- Modals -->
     <!-- Confirm Delete -->
-    <b-modal ref="confirm-delete" title="Confirm Delete">
-      Are you sure you would like to delete this item?
-      <div slot="modal-footer">
-        <b-button variant="danger">
-          Delete
-        </b-button>
-        <b-button variant="outline-dark" @click="$refs['confirm-delete'].hide()">
-          Cancel
-        </b-button>
-      </div>
-    </b-modal>
+    <confirm-delete-modal
+      id="confirm-delete"
+      :item="confirmDeleteModal.item"
+      :index="confirmDeleteModal.index"
+      :item-property-labels="{ TransactionNo: 'Transaction Code', price: 'Cost of Sale', NoItems: 'No of Items', time: 'Time of Sale' }"
+      @confirm-deletion="deleteRow(confirmDeleteModal.index)"
+    />
 
     <!-- Info modal -->
     <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
@@ -64,7 +60,7 @@
             <b-button size="sm" class="mr-1" @click="info(row.item, row.item, $event.target)">
               Edit
             </b-button>
-            <b-button size="sm" @click="$refs['confirm-delete'].show()">
+            <b-button size="sm" @click="confirmDeleteRow(row.item, row.index)">
               Delete
             </b-button>
           </template>
@@ -91,10 +87,11 @@ import Navbar from '~/components/Navbar.vue'
 import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
 import SortControl from '~/components/SortControl.vue'
 import FilterControl from '~/components/FilterControl.vue'
+import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 
 export default {
   components: {
-    Navbar, TimeSelectionButtons, SortControl, FilterControl
+    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal
   },
   data () {
     return {
@@ -135,6 +132,10 @@ export default {
         content: '',
         TransactionNo: '',
         money: '$'
+      },
+      confirmDeleteModal: {
+        index: null,
+        item: { TransactionNo: -1, price: -1, NoItems: -1, time: '' }
       }
     }
   },
@@ -168,6 +169,15 @@ export default {
       this.totalRows = filteredItems.length
       this.currentPprice = 1
     },
+    confirmDeleteRow (item, index) {
+      const niceitem = { TransactionNo: item.TransactionNo, price: item.price.cost, NoItems: item.NoItems, time: item.time }
+      this.confirmDeleteModal = { item: niceitem, index }
+      this.$bvModal.show('confirm-delete')
+    },
+    deleteRow (index) {
+      this.items.splice(index, 1)
+      // TODO - send delete to server
+    },
     filterByDate (option) {
       // Get Date
       const today = new Date()
@@ -194,13 +204,10 @@ export default {
 <style lang="scss">
 .container {
   min-height: 100vh;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 .table {
-    border-collapse: collapse; /* Collapse borders */
-    border: 1px solid #ddd; /* Add a grey border */
+    border-collapse: collapse;
+    border: 1px solid #ddd;
     align-items: center;
     text-align: center;
     justify-content: center;
