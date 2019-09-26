@@ -9,15 +9,22 @@
       :item-property-labels="{ TransactionNo: 'Transaction Code', price: 'Cost of Sale', NoItems: 'No of Items', time: 'Time of Sale' }"
       @confirm-deletion="deleteRow(confirmDeleteModal.index)"
     />
+    <edit-modal
+      id="confirm-edit"
+      :item="editModal.item"
+      :index="editModal.index"
+      :item-property-labels="{ TransactionNo: 'Transaction Code', price: 'Cost of Sale', NoItems: 'No of Items', time: 'Time of Sale' }"
+      @confirm-deletion="editTransaction(editModal.index)"
+    />
 
     <!-- Info modal -->
-    <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
+    <!-- <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
       <template v-slot:default="{ hide }">
         <p>{{ infoModal.content[1] }}</p>
       </template>
 
       <pre>{{ infoModal.content }}</pre>
-    </b-modal>
+    </b-modal> -->
 
     <!-- Page -->
     <navbar title="Display Sales Record" />
@@ -57,7 +64,7 @@
           </template>
 
           <template v-slot:cell(actions)="row">
-            <b-button size="sm" class="mr-1" @click="info(row.item, row.item, $event.target)">
+            <b-button size="sm" @click="editInfo(row.item, row.index)">
               Edit
             </b-button>
             <b-button size="sm" @click="confirmDeleteRow(row.item, row.index)">
@@ -88,10 +95,10 @@ import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
 import SortControl from '~/components/SortControl.vue'
 import FilterControl from '~/components/FilterControl.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
-
+import EditModal from '~/components/EditModal.vue'
 export default {
   components: {
-    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal
+    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal
   },
   data () {
     return {
@@ -126,12 +133,16 @@ export default {
       filter: null,
       filterOn: [],
       today: '',
-      infoModal: {
-        id: 'info-modal',
-        title: '',
-        content: '',
-        TransactionNo: '',
-        money: '$'
+      // infoModal: {
+      //   id: 'info-modal',
+      //   title: '',
+      //   content: '',
+      //   TransactionNo: '',
+      //   money: '$'
+      // },
+      editModal: {
+        index: null,
+        item: { TransactionNo: -1, price: -1, NoItems: -1, time: '' }
       },
       confirmDeleteModal: {
         index: null,
@@ -154,16 +165,21 @@ export default {
     this.totalRows = this.items.length
   },
   methods: {
-    info (item, index, button) {
-      this.infoModal.title = item.TransactionNo
-      this.infoModal.content = item
-      this.infoModal.TransactionNo = item.TransactionNo
-      this.$root.$emit('bv::show::modal', this.infoModal.id, button)
+    // info (item, index, button) {
+    //   this.infoModal.title = item.TransactionNo
+    //   this.infoModal.content = item
+    //   this.infoModal.TransactionNo = item.TransactionNo
+    //   this.$root.$emit('bv::show::modal', this.infoModal.id, button)
+    // },
+    editInfo (item, index) {
+      const niceitem = { TransactionNo: item.TransactionNo, price: item.price.cost, NoItems: item.NoItems, time: item.time }
+      this.editModal = { item: niceitem, index }
+      this.$bvModal.show('confirm-edit')
     },
-    resetInfoModal () {
-      this.infoModal.title = ''
-      this.infoModal.content = ''
-    },
+    // resetInfoModal () {
+    //   this.infoModal.title = ''
+    //   this.infoModal.content = ''
+    // },
     onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/pprices due to filtering
       this.totalRows = filteredItems.length
@@ -177,6 +193,10 @@ export default {
     deleteRow (index) {
       this.items.splice(index, 1)
       // TODO - send delete to server
+    },
+    editTransaction (index) {
+      this.items.splice(index, 1)
+      // TODO - update to server
     },
     filterByDate (option) {
       // Get Date
