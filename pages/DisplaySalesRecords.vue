@@ -31,57 +31,11 @@
       <!-- User Interface controls -->
       <b-row>
         <b-col lg="6" class="my-1">
-          <b-form-group
-            label="Sort"
-            label-cols-sm="3"
-            label-align-sm="right"
-            label-size="sm"
-            label-for="sortBySelect"
-            class="mb-0"
-          >
-            <b-input-group size="sm">
-              <b-form-select id="sortBySelect" v-model="sortBy" :options="sortOptions" class="w-75">
-                <template v-slot:first>
-                  <option value="">
-                    -- none --
-                  </option>
-                </template>
-              </b-form-select>
-              <b-form-select v-model="sortDesc" size="sm" :disabled="!sortBy" class="w-25">
-                <option :value="false">
-                  Asc
-                </option>
-                <option :value="true">
-                  Desc
-                </option>
-              </b-form-select>
-            </b-input-group>
-          </b-form-group>
+          <sort-control :sort-value="{sortBy, sortDesc}" :sort-options="sortOptions" @input="sortBy = $event.sortBy; sortDesc=$event.sortDesc" />
         </b-col>
 
         <b-col lg="6" class="my-1">
-          <b-form-group
-            label="Filter"
-            label-cols-sm="3"
-            label-align-sm="right"
-            label-size="sm"
-            label-for="filterInput"
-            class="mb-0"
-          >
-            <b-input-group size="sm">
-              <b-form-input
-                id="filterInput"
-                v-model="filter"
-                type="search"
-                placeholder="Type to Search"
-              />
-              <b-input-group-append>
-                <b-button :disabled="!filter" @click="filter = ''">
-                  Clear
-                </b-button>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
+          <filter-control :filter="filter" @input="filter = $event" />
         </b-col>
 
         <!-- Main table element -->
@@ -135,10 +89,12 @@
 <script>
 import Navbar from '~/components/Navbar.vue'
 import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
+import SortControl from '~/components/SortControl.vue'
+import FilterControl from '~/components/FilterControl.vue'
 
 export default {
   components: {
-    Navbar, TimeSelectionButtons
+    Navbar, TimeSelectionButtons, SortControl, FilterControl
   },
   data () {
     return {
@@ -235,21 +191,9 @@ export default {
 }
 </script>
 
-<style>
-#Input {
-  background-position: 10px 12px; /* Position the search icon */
-  background-repeat: no-repeat; /* Do not repeat the icon imprice */
-  width: 50%; /* Full-width */
-  font-size: 16px; /* Increase font-size */
-  padding: 12px 20px 12px 40px; /* Add some padding */
-  border: 1px solid #ddd; /* Add a grey border */
-  margin-bottom: 12px; /* Add some space below the input */
-
-}
+<style lang="scss">
 .container {
-  margin: 0 auto;
   min-height: 100vh;
-  display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
