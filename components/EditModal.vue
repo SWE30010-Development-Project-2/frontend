@@ -1,11 +1,23 @@
 <template>
-  <b-modal :id="id" title="Edit Sale">
-    <p>Edit Transaction Items</p>
-    <p v-for="(property, propertyName) in item" :key="propertyName">
-      <strong>{{ itemPropertyLabels[propertyName] }}: </strong>{{ property }}
-    </p>
+  <b-modal :id="id" title="Edit Transaction Items">
+    <b-form>
+      <b-form-group
+        v-for="(property, propertyName) in item"
+        :id="'fieldset-' + propertyName"
+        :key="propertyName"
+        label-cols="4"
+        :label="itemPropertyLabels[propertyName] + ': '"
+        :label-for="propertyName"
+      >
+        <b-form-input
+          :id="propertyName"
+          v-model="item[propertyName]"
+          :placeholder="itemPropertyLabels[propertyName]"
+        />
+      </b-form-group>
+    </b-form>
     <div slot="modal-footer">
-      <b-button variant="danger" @click="$bvModal.hide(id); $emit('confirm-editing')">
+      <b-button variant="primary" @click="$bvModal.hide(id); $emit('commitEdit', item)">
         Edit
       </b-button>
       <b-button variant="outline-dark" @click="$bvModal.hide(id)">

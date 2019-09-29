@@ -1,23 +1,22 @@
 <template>
   <div>
     <!-- Modals -->
-    <!-- Confirm Delete -->
+    <!-- Confirm Delete Modal -->
     <confirm-delete-modal
-      id="confirm-delete"
+      id="confirm-delete-modal"
       :item="confirmDeleteModal.item"
       :index="confirmDeleteModal.index"
       :item-property-labels="{ sales: 'Sales No', name: 'Product Name' }"
       @confirm-deletion="deleteRow(confirmDeleteModal.index)"
     />
-
-    <!-- Info modal -->
-    <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
-      <template v-slot:default="{ hide }">
-        <p>{{ infoModal.content[1] }}</p>
-      </template>
-
-      <pre>{{ infoModal.content }}</pre>
-    </b-modal>
+    <!-- Edit Modal -->
+    <edit-modal
+      id="edit-modal"
+      :item="editModal.item"
+      :index="editModal.index"
+      :item-property-labels="{ sales: 'Sales No', name: 'Product Name' }"
+      @commitEdit="commitEdit($event,editModal.index)"
+    />
 
     <!-- Page -->
     <navbar title="Display Stock" />
@@ -83,7 +82,7 @@
         @filtered="onFiltered"
       >
         <template v-slot:cell(actions)="row">
-          <b-button size="sm" class="mr-1" @click="info(row.item, row.index, $event.target)">
+          <b-button size="sm" class="mr-1" @click="makeEdit(row.item, row.index)">
             Edit
           </b-button>
           <b-button size="sm" @click="confirmDeleteRow(row.item, row.index)">
@@ -111,10 +110,11 @@ import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
 import SortControl from '~/components/SortControl.vue'
 import FilterControl from '~/components/FilterControl.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
+import EditModal from '~/components/EditModal.vue'
 
 export default {
   components: {
-    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal
+    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal
   },
   data () {
     return {
@@ -146,10 +146,9 @@ export default {
       sortDirection: 'asc',
       filter: null,
       filterOn: [],
-      infoModal: {
-        id: 'info-modal',
-        title: '',
-        content: ''
+      editModal: {
+        index: null,
+        item: { sales: 0, name: '' }
       },
       confirmDeleteModal: {
         index: null,
@@ -172,22 +171,21 @@ export default {
     this.totalRows = this.items.length
   },
   methods: {
-    info (item, index, button) {
-      this.infoModal.title = `Row index: ${index}`
-      this.infoModal.content = JSON.stringify(item, null, 2)
-      this.$root.$emit('bv::show::modal', this.infoModal.id, button)
-    },
     confirmDeleteRow (item, index) {
       this.confirmDeleteModal = { item, index }
-      this.$bvModal.show('confirm-delete')
+      this.$bvModal.show('confirm-delete-modal')
     },
     deleteRow (index) {
       this.items.splice(index, 1)
       // TODO - send delete to server
     },
-    resetInfoModal () {
-      this.infoModal.title = ''
-      this.infoModal.content = ''
+    commitEdit (newItem, index) {
+      this.items[index] = { sales: newItem.sales, name: newItem.name }
+      // TODO - update to server
+    },
+    makeEdit (item, index) {
+      this.editModal = { item, index }
+      this.$bvModal.show('edit-modal')
     },
     onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/psaless due to filtering

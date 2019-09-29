@@ -1,30 +1,22 @@
 <template>
   <div>
     <!-- Modals -->
-    <!-- Confirm Delete -->
+    <!-- Confirm Delete Modal -->
     <confirm-delete-modal
-      id="confirm-delete"
+      id="confirm-delete-modal"
       :item="confirmDeleteModal.item"
       :index="confirmDeleteModal.index"
       :item-property-labels="{ TransactionNo: 'Transaction Code', price: 'Cost of Sale', NoItems: 'No of Items', time: 'Time of Sale' }"
       @confirm-deletion="deleteRow(confirmDeleteModal.index)"
     />
+    <!-- Edit Modal -->
     <edit-modal
-      id="confirm-edit"
+      id="edit-modal"
       :item="editModal.item"
       :index="editModal.index"
       :item-property-labels="{ TransactionNo: 'Transaction Code', price: 'Cost of Sale', NoItems: 'No of Items', time: 'Time of Sale' }"
-      @confirm-deletion="editTransaction(editModal.index)"
+      @commitEdit="commitEdit($event,editModal.index)"
     />
-
-    <!-- Info modal -->
-    <!-- <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
-      <template v-slot:default="{ hide }">
-        <p>{{ infoModal.content[1] }}</p>
-      </template>
-
-      <pre>{{ infoModal.content }}</pre>
-    </b-modal> -->
 
     <!-- Page -->
     <navbar title="Display Sales Record" />
@@ -96,6 +88,7 @@ import SortControl from '~/components/SortControl.vue'
 import FilterControl from '~/components/FilterControl.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import EditModal from '~/components/EditModal.vue'
+
 export default {
   components: {
     Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal
@@ -133,13 +126,6 @@ export default {
       filter: null,
       filterOn: [],
       today: '',
-      // infoModal: {
-      //   id: 'info-modal',
-      //   title: '',
-      //   content: '',
-      //   TransactionNo: '',
-      //   money: '$'
-      // },
       editModal: {
         index: null,
         item: { TransactionNo: -1, price: -1, NoItems: -1, time: '' }
@@ -165,21 +151,11 @@ export default {
     this.totalRows = this.items.length
   },
   methods: {
-    // info (item, index, button) {
-    //   this.infoModal.title = item.TransactionNo
-    //   this.infoModal.content = item
-    //   this.infoModal.TransactionNo = item.TransactionNo
-    //   this.$root.$emit('bv::show::modal', this.infoModal.id, button)
-    // },
     editInfo (item, index) {
       const niceitem = { TransactionNo: item.TransactionNo, price: item.price.cost, NoItems: item.NoItems, time: item.time }
       this.editModal = { item: niceitem, index }
-      this.$bvModal.show('confirm-edit')
+      this.$bvModal.show('edit-modal')
     },
-    // resetInfoModal () {
-    //   this.infoModal.title = ''
-    //   this.infoModal.content = ''
-    // },
     onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/pprices due to filtering
       this.totalRows = filteredItems.length
@@ -188,14 +164,14 @@ export default {
     confirmDeleteRow (item, index) {
       const niceitem = { TransactionNo: item.TransactionNo, price: item.price.cost, NoItems: item.NoItems, time: item.time }
       this.confirmDeleteModal = { item: niceitem, index }
-      this.$bvModal.show('confirm-delete')
+      this.$bvModal.show('confirm-delete-modal')
     },
     deleteRow (index) {
       this.items.splice(index, 1)
       // TODO - send delete to server
     },
-    editTransaction (index) {
-      this.items.splice(index, 1)
+    commitEdit (newItem, index) {
+      this.items[index] = { TransactionNo: newItem.TransactionNo, price: { cost: newItem.price }, NoItems: newItem.NoItems, time: newItem.time }
       // TODO - update to server
     },
     filterByDate (option) {
