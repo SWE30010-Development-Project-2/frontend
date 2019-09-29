@@ -1,7 +1,9 @@
 <template>
   <b-modal :id="id" title="Medicine Information">
+    <p v-for="i in 20" :key="i" class="my-4" /></p>
     <p>Name: {{ item.name }}</p>
     <p>Information: {{ item.info }}</p>
+    </p>
     <div slot="modal-footer">
       <b-button variant="primary" @click="$bvModal.hide(id);">
         Done
