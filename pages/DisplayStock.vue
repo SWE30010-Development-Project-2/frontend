@@ -14,10 +14,16 @@
       id="edit-modal"
       :item="editModal.item"
       :index="editModal.index"
-      :item-property-labels="{ sales: 'Sales No', name: 'Product Name' }"
+      :item-property-labels="{ sales: 'Sales No', name: 'Product Name', info: 'Information' }"
       @commitEdit="commitEdit($event,editModal.index)"
     />
-
+    <!-- Info Modal -->
+    <info-modal
+      id="info-modal"
+      :item="infoModal.item"
+      :index="infoModal.index"
+      :item-property-labels="{ name: 'Product Name', info: 'Information' }"
+    />
     <!-- Page -->
     <navbar title="Display Stock" />
     <time-selection-buttons @today="filterByDate('today')" @week="filterByDate('week')" @month="filterByDate('month')" @year="filterByDate('year')" />
@@ -82,6 +88,9 @@
         @filtered="onFiltered"
       >
         <template v-slot:cell(actions)="row">
+          <b-button size="sm" class="mr-1" @click="showInfo(row.item, row.index)">
+            Info
+          </b-button>
           <b-button size="sm" class="mr-1" @click="makeEdit(row.item, row.index)">
             Edit
           </b-button>
@@ -111,26 +120,27 @@ import SortControl from '~/components/SortControl.vue'
 import FilterControl from '~/components/FilterControl.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import EditModal from '~/components/EditModal.vue'
+import InfoModal from '~/components/InfoModal.vue'
 
 export default {
   components: {
-    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal
+    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal, InfoModal
   },
   data () {
     return {
       items: [
-        { sales: 40, name: 'Xanax' },
-        { sales: 21, name: 'Cocaine' },
-        { sales: 9, name: 'Glucophage' },
-        { sales: 89, name: 'GHB' },
-        { sales: 38, name: 'Vicodin' },
-        { sales: 27, name: 'Lipitor' },
-        { sales: 40, name: 'Zofran' },
-        { sales: 87, name: 'Panadol' },
-        { sales: 26, name: 'Amoxil' },
-        { sales: 22, name: 'Delasone' },
-        { sales: 38, name: 'Neurontin' },
-        { sales: 29, name: 'Prinivil' }
+        { sales: 40, name: 'Xanax', info: 'Medicine' },
+        { sales: 21, name: 'Cocaine', info: 'Medicine' },
+        { sales: 9, name: 'Glucophage', info: 'Medicine' },
+        { sales: 89, name: 'GHB', info: 'Medicine' },
+        { sales: 38, name: 'Vicodin', info: 'Medicine' },
+        { sales: 27, name: 'Lipitor', info: 'Medicine' },
+        { sales: 40, name: 'Zofran', info: 'Medicine' },
+        { sales: 87, name: 'Panadol', info: 'Medicine' },
+        { sales: 26, name: 'Amoxil', info: 'Medicine' },
+        { sales: 22, name: 'Delasone', info: 'Medicine' },
+        { sales: 38, name: 'Neurontin', info: 'Medicine' },
+        { sales: 29, name: 'Prinivil', info: 'Medicine' }
       ],
       fields: [
         { key: 'name', label: 'Product Name', sortable: true, sortDirection: 'desc' },
@@ -153,6 +163,10 @@ export default {
       confirmDeleteModal: {
         index: null,
         item: { sales: 0, name: '' }
+      },
+      infoModal: {
+        index: null,
+        item: { name: '', info: '' }
       }
     }
   },
@@ -186,6 +200,10 @@ export default {
     makeEdit (item, index) {
       this.editModal = { item, index }
       this.$bvModal.show('edit-modal')
+    },
+    showInfo (item, index) {
+      this.infoModal = { item, index }
+      this.$bvModal.show('info-modal')
     },
     onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/psaless due to filtering
