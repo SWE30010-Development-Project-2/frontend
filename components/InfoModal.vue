@@ -1,6 +1,5 @@
 <template>
   <b-modal :id="id" title="Medicine Information">
-    <p v-for="i in 20" :key="i" class="my-4" /></p>
     <p>Name: {{ item.name }}</p>
     <p>Information: {{ item.info }}</p>
     </p>
@@ -17,7 +16,7 @@ export default {
   props: {
     id: {
       type: String,
-      default: 'confirm-delete',
+      default: 'info-modal',
       required: true
     },
     item: {
