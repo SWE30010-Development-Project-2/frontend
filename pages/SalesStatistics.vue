@@ -2,7 +2,7 @@
   <div>
     <navbar title="Home" />
     <div class="container">
-      <b-row class="pt-5 pb-5">
+      <b-row class="pt-5 pb-3">
         <b-col>
           <h1 class="display-4 text-center">
             Sales Statistics
