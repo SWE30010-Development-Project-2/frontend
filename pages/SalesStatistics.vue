@@ -70,65 +70,21 @@
             <b-row class="mb-4">
               <b-col>
                 <h4>Time Granularity</h4>
-                <b-button-group>
-                  <template v-if="weekly">
-                    <b-button variant="primary">
-                      Weekly
-                    </b-button>
-                    <b-button variant="outline-primary" @click="weekly=false">
-                      Monthly
-                    </b-button>
-                  </template>
-                  <template v-else>
-                    <b-button variant="outline-primary" @click="weekly=true">
-                      Weekly
-                    </b-button>
-                    <b-button variant="primary">
-                      Monthly
-                    </b-button>
-                  </template>
-                </b-button-group>
+                <toggle-control v-model="weekly" option-a="Weekly" option-b="Monthly" />
               </b-col>
             </b-row>
             <b-row>
               <b-col>
                 <h4>Start Date</h4>
-                <b-form-select v-model="yearStart" :options="[2019,2018]" class="mb-3">
-                  <template v-slot:first>
-                    <option :value="null" disabled>
-                      -- Please select a year --
-                    </option>
-                  </template>
-                </b-form-select>
-
-                <template v-if="weekly">
-                  <b-form-select v-model="weekStart" :options="[1,2,3,4,54]" class="mb-3">
-                    <template v-slot:first>
-                      <option :value="null" disabled>
-                        -- Please select a week --
-                      </option>
-                    </template>
-                  </b-form-select>
-                </template>
-                <template v-else>
-                  <b-form-select v-model="monthStart" :options="['Jan', 'Feb']" class="mb-3">
-                    <template v-slot:first>
-                      <option :value="null" disabled>
-                        -- Please select a month --
-                      </option>
-                    </template>
-                  </b-form-select>
-                </template>
+                <select-year v-model="yearStart" :from="2000" :to="2019" />
+                <select-week v-if="weekly" v-model="weekStart" />
+                <select-month v-else v-model="monthStart" />
               </b-col>
               <b-col>
                 <h4>End Date</h4>
-                <b-form-select v-model="yearEnd" :options="[2019,2018]" class="mb-3">
-                  <template v-slot:first>
-                    <option :value="null" disabled>
-                      -- Please select a year --
-                    </option>
-                  </template>
-                </b-form-select>
+                <select-year v-model="yearEnd" :from="2000" :to="2019" />
+                <select-week v-if="weekly" v-model="weekEnd" />
+                <select-month v-else v-model="monthEnd" />
               </b-col>
             </b-row>
           </b-card>
@@ -148,18 +104,24 @@
 <script>
 import Navbar from '~/components/Navbar.vue'
 import SearchedItem from '~/components/SearchedItem.vue'
+import SelectMonth from '~/components/SelectMonth.vue'
+import SelectYear from '~/components/SelectYear.vue'
+import SelectWeek from '~/components/SelectWeek.vue'
+import ToggleControl from '~/components/ToggleControl.vue'
 
 export default {
   components: {
-    Navbar, SearchedItem
+    Navbar, SearchedItem, SelectMonth, SelectYear, SelectWeek, ToggleControl
   },
   data () {
     return {
-      weekly: false,
+      weekly: true,
       yearStart: null,
       yearEnd: null,
       weekStart: null,
-      monthStart: null
+      monthStart: null,
+      weekEnd: null,
+      monthEnd: null
     }
   }
 }
