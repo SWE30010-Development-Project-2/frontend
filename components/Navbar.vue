@@ -19,6 +19,9 @@
       <b-nav-item href="/login">
         Login
       </b-nav-item>
+      <b-nav-item href="/salesstatistics">
+        Sales Statistics
+      </b-nav-item>
     </b-navbar-nav>
   </b-navbar>
 </template>
