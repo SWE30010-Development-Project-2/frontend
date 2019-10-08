@@ -8,16 +8,9 @@
         {{ name }}
       </div>
       <div class="align-self-center">
-        <template v-if="add">
-          <b-button variant="outline-primary" class="text-nowrap">
-            <font-awesome-icon icon="plus" /><span class="d-none d-xl-inline">&nbsp;Compare</span>
-          </b-button>
-        </template>
-        <template v-else>
-          <b-button variant="outline-danger" class="text-nowrap">
-            <font-awesome-icon icon="trash-alt" /><span class="d-none d-xl-inline">&nbsp;Don't Compare</span>
-          </b-button>
-        </template>
+        <b-button variant="outline-danger" class="text-nowrap" @click="$emit('deleteItem')">
+          <font-awesome-icon icon="trash-alt" /><span class="d-none d-xl-inline">&nbsp;Remove</span>
+        </b-button>
       </div>
     </div>
   </b-list-group-item>
@@ -44,11 +37,6 @@ export default {
     img: {
       type: String,
       default: '',
-      required: true
-    },
-    add: {
-      type: Boolean,
-      default: false,
       required: true
     }
   }

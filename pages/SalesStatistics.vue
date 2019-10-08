@@ -21,37 +21,23 @@
               </b-tab>
               <b-tab title="Single Items">
                 <b-row>
-                  <b-col>
+                  <b-col cols="8">
                     <h4>Choose Items for the Report</h4>
-                    <b-form-group
-                      label="Select Item"
-                      label-for="filterInput"
-                    >
-                      <b-input-group>
-                        <b-form-input
-                          id="filterInput"
-                          v-model="filter"
-                          type="search"
-                          placeholder="Type to Search"
-                        />
-                        <div class="w-100" style="position: absolute; top: 100%; z-index: 100; left: 0px; right: auto;">
-                          <b-list-group class="mt-1" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2)">
-                            <searched-item name="item 1" img="/images/paracetamol.jpg" add />
-                          </b-list-group>
-                        </div>
-                        <b-input-group-append>
-                          <b-button variant="outline-secondary">
-                            Clear
-                          </b-button>
-                        </b-input-group-append>
-                      </b-input-group>
-                    </b-form-group>
+                    <b-form-row class="pt-0 pb-3">
+                      <b-col>
+                        <b-form-input v-model="search" :type="search" placeholder="Search Products or Enter Barcode" />
+                      </b-col>
+                    </b-form-row>
+                    <b-row>
+                      <b-col v-for="product in filteredProducts" :key="product.name" cols="3">
+                        <product small :name="product.name" :img-src="product.img" :barcode="product.barcode" @click="addItem(product.name)" />
+                      </b-col>
+                    </b-row>
                   </b-col>
-                  <b-col>
+                  <b-col cols="4">
                     <h4>Selected Items</h4>
                     <b-list-group>
-                      <searched-item name="item 1" img="/images/paracetamol.jpg" />
-                      <searched-item name="item 1" img="/images/paracetamol.jpg" />
+                      <searched-item v-for="(item, index) in items" :key="index" :name="item.name" img="/images/paracetamol.jpg" @deleteItem="items.splice(index, 1)" />
                     </b-list-group>
                   </b-col>
                 </b-row>
@@ -108,14 +94,14 @@ import SelectMonth from '~/components/SelectMonth.vue'
 import SelectYear from '~/components/SelectYear.vue'
 import SelectWeek from '~/components/SelectWeek.vue'
 import ToggleControl from '~/components/ToggleControl.vue'
+import Product from '~/components/Product.vue'
 
 export default {
   components: {
-    Navbar, SearchedItem, SelectMonth, SelectYear, SelectWeek, ToggleControl
+    Navbar, SearchedItem, SelectMonth, SelectYear, SelectWeek, ToggleControl, Product
   },
   data () {
     return {
-      // Other data
       timePeriod: {
         weekly: true,
         startDate: {
@@ -128,12 +114,44 @@ export default {
           week: null,
           month: null
         }
-      }
+      },
+      products: [
+        { name: 'Paracetamol', img: '/images/paracetamol.jpg', barcode: '931001244534' },
+        { name: 'Sambucol', img: '/images/sambucol.jpg', barcode: '124499953403' },
+        { name: 'Xanax', img: '/images/xanax.jpg', barcode: '124454444333' },
+        { name: 'Glucophage', img: '/images/placeholder.jpg', barcode: '454943112345' },
+        { name: 'Amoxil', img: '/images/placeholder.jpg', barcode: '000000000112' },
+        { name: 'Lipitor', img: '/images/placeholder.jpg', barcode: '000333300112' },
+        { name: 'Zofran', img: '/images/placeholder.jpg', barcode: '069693808812' },
+        { name: 'Panadol', img: '/images/placeholder.jpg', barcode: '777788880000' },
+        { name: 'Vicodin', img: '/images/placeholder.jpg', barcode: '555500226688' },
+        { name: 'Neurontin', img: '/images/placeholder.jpg', barcode: '556600225656' }
+      ],
+      items: [],
+      search: ''
+    }
+  },
+  computed: {
+    filteredProducts () {
+      return this.products.filter((product) => {
+        const name = product.name.toLowerCase()
+        const barcode = product.barcode.toLowerCase()
+        const search = this.search.toLowerCase()
+
+        return name.includes(search) || barcode.includes(search) ||
+        search.includes(name) || search.includes(barcode)
+      })
     }
   },
   methods: {
     generateReport () {
       console.log(this.timePeriod)
+    },
+    addItem (name) {
+      const list = this.items.filter(item => (item.name === name))
+      if (list.length === 0) {
+        this.items.push({ name })
+      }
     }
   }
 
