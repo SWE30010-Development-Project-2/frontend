@@ -1,5 +1,5 @@
 <template>
-  <b-form-select v-model="value" :options="years" class="mb-3">
+  <b-form-select v-model="value" :options="years" class="mb-3" @input="$emit('input',value)">
     <template v-slot:first>
       <option :value="null" disabled>
         -- Please select a year --

@@ -35,7 +35,7 @@
                           placeholder="Type to Search"
                         />
                         <div class="w-100" style="position: absolute; top: 100%; z-index: 100; left: 0px; right: auto;">
-                          <b-list-group>
+                          <b-list-group class="mt-1" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2)">
                             <searched-item name="item 1" img="/images/paracetamol.jpg" add />
                           </b-list-group>
                         </div>
@@ -70,21 +70,21 @@
             <b-row class="mb-4">
               <b-col>
                 <h4>Time Granularity</h4>
-                <toggle-control v-model="weekly" option-a="Weekly" option-b="Monthly" />
+                <toggle-control v-model="timePeriod.weekly" option-a="Weekly" option-b="Monthly" />
               </b-col>
             </b-row>
             <b-row>
               <b-col>
                 <h4>Start Date</h4>
-                <select-year v-model="yearStart" :from="2000" :to="2019" />
-                <select-week v-if="weekly" v-model="weekStart" />
-                <select-month v-else v-model="monthStart" />
+                <select-year v-model="timePeriod.startDate.year" :from="2000" :to="2019" />
+                <select-week v-if="timePeriod.weekly" v-model="timePeriod.startDate.week" />
+                <select-month v-else v-model="timePeriod.startDate.month" />
               </b-col>
               <b-col>
                 <h4>End Date</h4>
-                <select-year v-model="yearEnd" :from="2000" :to="2019" />
-                <select-week v-if="weekly" v-model="weekEnd" />
-                <select-month v-else v-model="monthEnd" />
+                <select-year v-model="timePeriod.endDate.year" :from="2000" :to="2019" />
+                <select-week v-if="timePeriod.weekly" v-model="timePeriod.endDate.week" />
+                <select-month v-else v-model="timePeriod.endDate.month" />
               </b-col>
             </b-row>
           </b-card>
@@ -92,7 +92,7 @@
       </b-row>
       <b-row>
         <b-col class="text-right">
-          <b-button variant="primary">
+          <b-button variant="primary" @click="generateReport()">
             Generate Report
           </b-button>
         </b-col>
@@ -115,15 +115,28 @@ export default {
   },
   data () {
     return {
-      weekly: true,
-      yearStart: null,
-      yearEnd: null,
-      weekStart: null,
-      monthStart: null,
-      weekEnd: null,
-      monthEnd: null
+      // Other data
+      timePeriod: {
+        weekly: true,
+        startDate: {
+          year: null,
+          week: null,
+          month: null
+        },
+        endDate: {
+          year: null,
+          week: null,
+          month: null
+        }
+      }
+    }
+  },
+  methods: {
+    generateReport () {
+      console.log(this.timePeriod)
     }
   }
+
 }
 </script>
 
