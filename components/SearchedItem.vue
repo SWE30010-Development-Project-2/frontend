@@ -8,25 +8,18 @@
         {{ name }}
       </div>
       <div class="align-self-center">
-        <b-button variant="outline-danger" class="text-nowrap" @click="$emit('deleteItem')">
-          <font-awesome-icon icon="trash-alt" /><span class="d-none d-xl-inline">&nbsp;Remove</span>
-        </b-button>
+        <remove-button @click="$emit('deleteItem')" />
       </div>
     </div>
   </b-list-group-item>
 </template>
 
 <script>
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
-library.add(faPlus)
-library.add(faTrashAlt)
+import RemoveButton from '~/components/RemoveButton.vue'
 
 export default {
   components: {
-    FontAwesomeIcon
+    RemoveButton
   },
   props: {
     name: {

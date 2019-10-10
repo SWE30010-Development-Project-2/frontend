@@ -5,25 +5,21 @@
     </b-col>
     <b-col cols="auto">
       <span class="d-inline"><number v-model="quantity" @input="$emit('update-qty',quantity)" /></span>
-      <span class="d-inline"><b-button variant="outline-danger" class="text-nowrap" @click="$emit('deleteItem',index)">
-        <font-awesome-icon icon="trash-alt" /><span class="d-none d-xl-inline">&nbsp;Remove</span>
-      </b-button></span>
+      <span class="d-inline">
+        <remove-button @click="$emit('deleteItem',index)" />
+      </span>
     </b-col>
   </b-row>
 </template>
 
 <script>
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Number from '~/components/NumberPlusMinus.vue'
-
-library.add(faTrashAlt)
+import RemoveButton from '~/components/RemoveButton.vue'
 
 export default {
   components: {
     Number,
-    FontAwesomeIcon
+    RemoveButton
   },
   props: ['name', 'quantity', 'index']
   // props: {

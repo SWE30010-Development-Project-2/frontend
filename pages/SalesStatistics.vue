@@ -29,8 +29,15 @@
                       </b-col>
                     </b-form-row>
                     <b-row>
-                      <b-col v-for="product in filteredProducts" :key="product.name" cols="3">
-                        <product small :name="product.name" :img-src="product.img" :barcode="product.barcode" @click="addItem(product.name)" />
+                      <b-col v-for="product in filteredProducts" :key="product.name" cols="2">
+                        <product
+                          small
+                          :ticked="items.filter(item => item.name == product.name).length > 0 "
+                          :name="product.name"
+                          :img-src="product.img"
+                          :barcode="product.barcode"
+                          @click="toggleItem(product.name)"
+                        />
                       </b-col>
                     </b-row>
                   </b-col>
@@ -43,7 +50,34 @@
                 </b-row>
               </b-tab>
               <b-tab title="Item Categories">
-                <b-card-text>Select Category/Group</b-card-text>
+                <b-row>
+                  <b-col cols="8">
+                    <h4>Choose Catagories/Groups of Items for the Report</h4>
+                    <b-form-row class="pt-0 pb-3">
+                      <b-col>
+                        <b-form-input v-model="search" :type="search" placeholder="Search Categories" />
+                      </b-col>
+                    </b-form-row>
+                    <b-row>
+                      <b-col v-for="product in filteredProducts" :key="product.name" cols="2">
+                        <product
+                          small
+                          :ticked="items.filter(item => item.name == product.name).length > 0 "
+                          :name="product.name"
+                          :img-src="product.img"
+                          :barcode="product.barcode"
+                          @click="toggleItem(product.name)"
+                        />
+                      </b-col>
+                    </b-row>
+                  </b-col>
+                  <b-col cols="4">
+                    <h4>Selected Categories</h4>
+                    <b-list-group>
+                      <searched-item v-for="(item, index) in items" :key="index" :name="item.name" img="/images/paracetamol.jpg" @deleteItem="items.splice(index, 1)" />
+                    </b-list-group>
+                  </b-col>
+                </b-row>
               </b-tab>
             </b-tabs>
           </b-card>
@@ -147,9 +181,11 @@ export default {
     generateReport () {
       console.log(this.timePeriod)
     },
-    addItem (name) {
-      const list = this.items.filter(item => (item.name === name))
-      if (list.length === 0) {
+    toggleItem (name) {
+      const index = this.items.findIndex(item => (item.name === name))
+      if (index > -1) {
+        this.items.splice(index, 1)
+      } else {
         this.items.push({ name })
       }
     }
