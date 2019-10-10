@@ -54,11 +54,6 @@ export default {
 </script>
 
 <style lang="scss">
-h1, h2 {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
 .big-icon {
   font-size: 4rem;
 }

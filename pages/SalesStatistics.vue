@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navbar title="Home" />
+    <navbar title="Sales Statistics" />
     <div class="container">
       <b-row class="pt-5 pb-3">
         <b-col>
@@ -13,7 +13,7 @@
         <b-col>
           <h2>Select Items</h2>
           <b-card no-body>
-            <b-tabs card>
+            <b-tabs v-model="selected.tab" card>
               <b-tab title="All Items" active>
                 <b-card-text>
                   All Items Selected
@@ -25,14 +25,14 @@
                     <h4>Choose Items for the Report</h4>
                     <b-form-row class="pt-0 pb-3">
                       <b-col>
-                        <b-form-input v-model="search" :type="search" placeholder="Search Products or Enter Barcode" />
+                        <b-form-input v-model="searchProducts" :type="search" placeholder="Search Products or Enter Barcode" />
                       </b-col>
                     </b-form-row>
                     <b-row>
                       <b-col v-for="product in filteredProducts" :key="product.name" cols="2">
                         <product
                           small
-                          :ticked="items.filter(item => item.name == product.name).length > 0 "
+                          :ticked="selected.products.filter(item => item.name == product.name).length > 0 "
                           :name="product.name"
                           :img-src="product.img"
                           :barcode="product.barcode"
@@ -44,7 +44,7 @@
                   <b-col cols="4">
                     <h4>Selected Items</h4>
                     <b-list-group>
-                      <searched-item v-for="(item, index) in items" :key="index" :name="item.name" img="/images/paracetamol.jpg" @deleteItem="items.splice(index, 1)" />
+                      <searched-item v-for="(item, index) in selected.products" :key="index" :name="item.name" img="/images/paracetamol.jpg" @deleteItem="selected.products.splice(index, 1)" />
                     </b-list-group>
                   </b-col>
                 </b-row>
@@ -52,21 +52,20 @@
               <b-tab title="Item Categories">
                 <b-row>
                   <b-col cols="8">
-                    <h4>Choose Catagories/Groups of Items for the Report</h4>
+                    <h4>Choose Categories/Groups of Items for the Report</h4>
                     <b-form-row class="pt-0 pb-3">
                       <b-col>
-                        <b-form-input v-model="search" :type="search" placeholder="Search Categories" />
+                        <b-form-input v-model="searchCategories" :type="search" placeholder="Search Categories" />
                       </b-col>
                     </b-form-row>
                     <b-row>
-                      <b-col v-for="product in filteredProducts" :key="product.name" cols="2">
-                        <product
-                          small
-                          :ticked="items.filter(item => item.name == product.name).length > 0 "
-                          :name="product.name"
-                          :img-src="product.img"
-                          :barcode="product.barcode"
-                          @click="toggleItem(product.name)"
+                      <b-col v-for="category in filteredCategories" :key="category.name" cols="2">
+                        <category
+                          :ticked="selected.categories.filter(cat => cat.name == category.name).length > 0 "
+                          :name="category.name"
+                          :img-src="category.img"
+                          :description="category.description"
+                          @click="toggleCategorySelection(category.name)"
                         />
                       </b-col>
                     </b-row>
@@ -74,7 +73,7 @@
                   <b-col cols="4">
                     <h4>Selected Categories</h4>
                     <b-list-group>
-                      <searched-item v-for="(item, index) in items" :key="index" :name="item.name" img="/images/paracetamol.jpg" @deleteItem="items.splice(index, 1)" />
+                      <searched-item v-for="(cat, index) in selected.categories" :key="index" :name="cat.name" img="/images/paracetamol.jpg" @deleteItem="selected.categories.splice(index, 1)" />
                     </b-list-group>
                   </b-col>
                 </b-row>
@@ -110,7 +109,7 @@
           </b-card>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row class="mb-4">
         <b-col class="text-right">
           <b-button variant="primary" @click="generateReport()">
             Generate Report
@@ -129,10 +128,11 @@ import SelectYear from '~/components/SelectYear.vue'
 import SelectWeek from '~/components/SelectWeek.vue'
 import ToggleControl from '~/components/ToggleControl.vue'
 import Product from '~/components/Product.vue'
+import Category from '~/components/Category.vue'
 
 export default {
   components: {
-    Navbar, SearchedItem, SelectMonth, SelectYear, SelectWeek, ToggleControl, Product
+    Navbar, SearchedItem, SelectMonth, SelectYear, SelectWeek, ToggleControl, Product, Category
   },
   data () {
     return {
@@ -149,6 +149,11 @@ export default {
           month: null
         }
       },
+      selected: {
+        tab: 0, // 0 all, 1 individual, 2 categories
+        categories: [],
+        products: []
+      },
       products: [
         { name: 'Paracetamol', img: '/images/paracetamol.jpg', barcode: '931001244534' },
         { name: 'Sambucol', img: '/images/sambucol.jpg', barcode: '124499953403' },
@@ -161,8 +166,12 @@ export default {
         { name: 'Vicodin', img: '/images/placeholder.jpg', barcode: '555500226688' },
         { name: 'Neurontin', img: '/images/placeholder.jpg', barcode: '556600225656' }
       ],
-      items: [],
-      search: ''
+      categories: [
+        { name: 'Painkillers', img: '/images/paracetamol.jpg', description: 'Panadol, Nurofen' },
+        { name: 'Antibiotics', img: '/images/paracetamol.jpg', description: 'Yay superbugs' }
+      ],
+      searchProducts: '',
+      searchCategories: ''
     }
   },
   computed: {
@@ -170,37 +179,60 @@ export default {
       return this.products.filter((product) => {
         const name = product.name.toLowerCase()
         const barcode = product.barcode.toLowerCase()
-        const search = this.search.toLowerCase()
+        const search = this.searchProducts.toLowerCase()
 
         return name.includes(search) || barcode.includes(search) ||
         search.includes(name) || search.includes(barcode)
+      })
+    },
+    filteredCategories () {
+      return this.categories.filter((category) => {
+        const search = this.searchCategories.toLowerCase()
+        const name = category.name.toLowerCase()
+
+        return name.includes(search) || search.includes(name)
       })
     }
   },
   methods: {
     generateReport () {
-      console.log(this.timePeriod)
+      let selected
+      switch (this.selected.tab) {
+        case 0:
+          // All
+          selected = { type: 'all' }
+          break
+
+        case 1:
+          // Individual items
+          selected = { type: 'products', products: this.selected.products }
+          break
+
+        case 2:
+          // Categories
+          selected = { type: 'categories', categories: this.selected.categories }
+          break
+      }
+
+      console.log({ timePeriod: this.timePeriod, selected })
     },
     toggleItem (name) {
-      const index = this.items.findIndex(item => (item.name === name))
+      const index = this.selected.products.findIndex(item => (item.name === name))
       if (index > -1) {
-        this.items.splice(index, 1)
+        this.selected.products.splice(index, 1)
       } else {
-        this.items.push({ name })
+        this.selected.products.push({ name })
+      }
+    },
+    toggleCategorySelection (name) {
+      const index = this.selected.categories.findIndex(cat => (cat.name === name))
+      if (index > -1) {
+        this.selected.categories.splice(index, 1)
+      } else {
+        this.selected.categories.push({ name })
       }
     }
   }
 
 }
 </script>
-
-<style lang="scss">
-h1, h2 {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-.big-icon {
-  font-size: 4rem;
-}
-</style>
