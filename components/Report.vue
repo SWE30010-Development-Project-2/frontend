@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p>Placeholder</p>
-    <graph :chartdata="chartdata" :options="options" />
+    <graph :products="graphdata" weekly start-date="2015-07-01" end-date="2015-12-01" />
+    <graph :products="graphdata" monthly start-date="2015-07-01" end-date="2015-12-01" />
   </div>
 </template>
 
@@ -13,21 +13,7 @@ export default {
     Graph
   },
   data: () => ({
-    chartdata: {
-      labels: ['January', 'February', 'a', 'a', 'a', 'a', 'a', 'a', 'a'],
-      datasets: [
-        {
-          label: 'Data One',
-          backgroundColor: '#3b80703F', // 25% transparency
-          borderColor: '#3b8070',
-          data: [40, 20, 10, 30, 20, 2, 3, 40, 12]
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false
-    }
+    graphdata: [{ name: 'Product 1', data: [40, 20, 10, 30, 20, 2, 3, 40, 12] }]
   })
 }
 </script>
