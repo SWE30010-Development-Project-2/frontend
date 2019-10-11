@@ -1,0 +1,10 @@
+query FetchProducts {
+    products {
+        id
+        name
+        description
+        barcode
+        price
+    }
+}
+

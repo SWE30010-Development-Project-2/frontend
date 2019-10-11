@@ -121,6 +121,8 @@ import FilterControl from '~/components/FilterControl.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import EditModal from '~/components/EditModal.vue'
 import InfoModal from '~/components/InfoModal.vue'
+import FETCHPRODUCTS from '~/graphql/product/FETCHPRODUCTS.gql'
+import INIT from '~/graphql/product/INIT.gql'
 
 export default {
   components: {
@@ -180,7 +182,8 @@ export default {
         })
     }
   },
-  mounted () {
+  async mounted () {
+    await this.fetchProducts()
     // Set the initial number of items
     this.totalRows = this.items.length
   },
@@ -227,8 +230,21 @@ export default {
       } else if (option === 'year') {
         this.filter = yyyy
       }
-    }
+    },
+    async fetchProducts () {
+      this.errors = []
 
+      await this.$apollo
+        .query({
+          query: FETCHPRODUCTS
+        })
+        .then(({ data }) => {
+          console.log(data)
+        })
+        .catch((error) => {
+          this.errors = error.graphQLErrors.map(error => error)
+        })
+    }
   }
 }
 </script>
