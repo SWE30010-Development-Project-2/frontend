@@ -122,7 +122,6 @@ import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import EditModal from '~/components/EditModal.vue'
 import InfoModal from '~/components/InfoModal.vue'
 import FETCHPRODUCTS from '~/graphql/product/FETCHPRODUCTS.gql'
-import INIT from '~/graphql/product/INIT.gql'
 
 export default {
   components: {
