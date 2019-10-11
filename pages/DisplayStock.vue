@@ -244,6 +244,7 @@ export default {
           this.errors = error.graphQLErrors.map(error => error)
         })
     }
+
   }
 }
 </script>

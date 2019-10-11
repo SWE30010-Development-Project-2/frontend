@@ -1,0 +1,10 @@
+mutation {
+    addProduct(name:"Name", description: "Description", barcode: "0019284719823", price: 100)
+    {
+        id
+        name
+        description
+        barcode
+        price
+    }
+}
