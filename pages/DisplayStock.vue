@@ -15,7 +15,7 @@
       :item="{ sales: editModal.item.sales, name: editModal.item.name, description: editModal.item.description, price: editModal.item.price, barcode: editModal.item.barcode}"
       :index="editModal.index"
       :item-property-labels="{ sales: 'Sales No', name: 'Product Name', description: 'Description', price: 'Price', barcode: 'Barcode' }"
-      @commitEdit="commitEdit($event,editModal.index)"
+      @commitEdit="commitEdit($event)"
     />
     <!-- Info Modal -->
     <info-modal
@@ -92,6 +92,7 @@ import EditModal from '~/components/EditModal.vue'
 import InfoModal from '~/components/InfoModal.vue'
 import FETCHPRODUCTS from '~/graphql/product/FETCHPRODUCTS.gql'
 import REMOVE_PRODUCT from '~/graphql/product/REMOVE_PRODUCT.gql'
+import UPDATE_PRODUCT from '~/graphql/product/UPDATE_PRODUCT.gql'
 
 export default {
   components: {
@@ -157,9 +158,21 @@ export default {
         variables: { id }
       })
     },
-    commitEdit (newItem, index) {
-      this.products[index] = { sales: newItem.sales, name: newItem.name }
-      // TODO - update to server
+    async commitEdit (newProduct) {
+      // this.products.filter(product => product.id === id ). = newProduct
+      // this.products[id] = newProduct
+
+      // Update to server
+      await this.$apollo.mutate({
+        mutation: UPDATE_PRODUCT,
+        variables: {
+          id: newProduct.id,
+          name: newProduct.name,
+          description: newProduct.description,
+          price: newProduct.price,
+          barcode: newProduct.barcode
+        }
+      })
     },
     makeEdit (item, index) {
       this.editModal = { item, index }
