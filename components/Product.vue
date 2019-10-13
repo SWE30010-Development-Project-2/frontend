@@ -40,11 +40,6 @@ export default {
       default: null,
       required: true
     },
-    imgSrc: {
-      type: String,
-      default: null,
-      required: true
-    },
     barcode: {
       type: String,
       default: null,
@@ -57,6 +52,11 @@ export default {
     ticked: {
       type: Boolean,
       default: false
+    }
+  },
+  computed: {
+    imgSrc () {
+      return '/images/' + this.name.toLowerCase() + '.jpg'
     }
   }
 }

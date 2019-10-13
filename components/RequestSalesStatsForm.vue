@@ -25,7 +25,6 @@
                         small
                         :ticked="selected.products.filter(item => item.name == product.name).length > 0 "
                         :name="product.name"
-                        :img-src="product.img"
                         :barcode="product.barcode"
                         @click="toggleItem(product.name)"
                       />
@@ -117,6 +116,7 @@ import SelectYear from '~/components/SelectYear.vue'
 import SelectWeek from '~/components/SelectWeek.vue'
 import ToggleControl from '~/components/ToggleControl.vue'
 import Product from '~/components/Product.vue'
+import FETCHPRODUCTS from '~/graphql/product/FETCHPRODUCTS.gql'
 import Category from '~/components/Category.vue'
 
 export default {
@@ -143,18 +143,7 @@ export default {
         categories: [],
         products: []
       },
-      products: [
-        { name: 'Paracetamol', img: '/images/paracetamol.jpg', barcode: '931001244534' },
-        { name: 'Sambucol', img: '/images/sambucol.jpg', barcode: '124499953403' },
-        { name: 'Xanax', img: '/images/xanax.jpg', barcode: '124454444333' },
-        { name: 'Glucophage', img: '/images/placeholder.jpg', barcode: '454943112345' },
-        { name: 'Amoxil', img: '/images/placeholder.jpg', barcode: '000000000112' },
-        { name: 'Lipitor', img: '/images/placeholder.jpg', barcode: '000333300112' },
-        { name: 'Zofran', img: '/images/placeholder.jpg', barcode: '069693808812' },
-        { name: 'Panadol', img: '/images/placeholder.jpg', barcode: '777788880000' },
-        { name: 'Vicodin', img: '/images/placeholder.jpg', barcode: '555500226688' },
-        { name: 'Neurontin', img: '/images/placeholder.jpg', barcode: '556600225656' }
-      ],
+      products: [],
       categories: [
         { name: 'Painkillers', img: '/images/paracetamol.jpg', description: 'Panadol, Nurofen' },
         { name: 'Antibiotics', img: '/images/paracetamol.jpg', description: 'Yay superbugs' }
@@ -182,6 +171,9 @@ export default {
         return name.includes(search) || search.includes(name)
       })
     }
+  },
+  async mounted () {
+    await this.fetchProducts()
   },
   methods: {
     generateReport () {
@@ -220,6 +212,15 @@ export default {
       } else {
         this.selected.categories.push({ name })
       }
+    },
+    async fetchProducts () {
+      await this.$apollo
+        .query({
+          query: FETCHPRODUCTS
+        })
+        .then(({ data }) => {
+          this.products = data.products
+        })
     }
   }
 

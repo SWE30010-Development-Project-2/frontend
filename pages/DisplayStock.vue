@@ -193,17 +193,12 @@ export default {
       }
     },
     async fetchProducts () {
-      this.errors = []
-
       await this.$apollo
         .query({
           query: FETCHPRODUCTS
         })
         .then(({ data }) => {
           this.products = data.products
-        })
-        .catch((error) => {
-          this.errors = error.graphQLErrors.map(error => error)
         })
     }
 
