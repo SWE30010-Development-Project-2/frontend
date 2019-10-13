@@ -11,7 +11,7 @@ export default {
   data () {
     return {
       products: [
-        { name: 'Paracetamol', barcode: '931001244534', price: 6.00 },
+        { name: 'Paracetamol', barcode: '931001244534', price: 6.00, description: 'A painkiller that is not prescription' },
         { name: 'Sambucol', barcode: '124499953403', price: 3.00 },
         { name: 'Xanax', barcode: '124454444333', price: 20.00 },
         { name: 'Glucophage', barcode: '454943112345', price: 20.00 },

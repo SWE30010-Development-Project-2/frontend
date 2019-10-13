@@ -1,7 +1,7 @@
 <template>
   <b-modal :id="id" title="Medicine Information">
     <p>Name: {{ item.name }}</p>
-    <p>Information: {{ item.info }}</p>
+    <p>Description: {{ item.description }}</p>
     </p>
     <div slot="modal-footer">
       <b-button variant="primary" @click="$bvModal.hide(id);">

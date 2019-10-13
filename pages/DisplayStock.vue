@@ -4,7 +4,7 @@
     <!-- Confirm Delete Modal -->
     <confirm-delete-modal
       id="confirm-delete-modal"
-      :item="confirmDeleteModal.item"
+      :item="{ sales: confirmDeleteModal.item.sales, name: confirmDeleteModal.item.name}"
       :index="confirmDeleteModal.index"
       :item-property-labels="{ sales: 'Sales No', name: 'Product Name' }"
       @confirm-deletion="deleteRow(confirmDeleteModal.index)"
@@ -12,9 +12,9 @@
     <!-- Edit Modal -->
     <edit-modal
       id="edit-modal"
-      :item="editModal.item"
+      :item="{ sales: editModal.item.sales, name: editModal.item.name, description: editModal.item.description, price: editModal.item.price, barcode: editModal.item.barcode}"
       :index="editModal.index"
-      :item-property-labels="{ sales: 'Sales No', name: 'Product Name', info: 'Information' }"
+      :item-property-labels="{ sales: 'Sales No', name: 'Product Name', description: 'Description', price: 'Price', barcode: 'Barcode' }"
       @commitEdit="commitEdit($event,editModal.index)"
     />
     <!-- Info Modal -->
@@ -22,7 +22,7 @@
       id="info-modal"
       :item="infoModal.item"
       :index="infoModal.index"
-      :item-property-labels="{ name: 'Product Name', info: 'Information' }"
+      :item-property-labels="{ name: 'Product Name', description: 'Description' }"
     />
     <!-- Page -->
     <navbar title="Display Stock" />
