@@ -76,7 +76,7 @@
         show-empty
         small
         stacked="md"
-        :items="items"
+        :items="products"
         :fields="fields"
         :current-psales="currentPsales"
         :per-psales="perPsales"
@@ -129,20 +129,7 @@ export default {
   },
   data () {
     return {
-      items: [
-        { sales: 40, name: 'Xanax', info: 'Medicine' },
-        { sales: 21, name: 'Cocaine', info: 'Medicine' },
-        { sales: 9, name: 'Glucophage', info: 'Medicine' },
-        { sales: 89, name: 'GHB', info: 'Medicine' },
-        { sales: 38, name: 'Vicodin', info: 'Medicine' },
-        { sales: 27, name: 'Lipitor', info: 'Medicine' },
-        { sales: 40, name: 'Zofran', info: 'Medicine' },
-        { sales: 87, name: 'Panadol', info: 'Medicine' },
-        { sales: 26, name: 'Amoxil', info: 'Medicine' },
-        { sales: 22, name: 'Delasone', info: 'Medicine' },
-        { sales: 38, name: 'Neurontin', info: 'Medicine' },
-        { sales: 29, name: 'Prinivil', info: 'Medicine' }
-      ],
+      products: [],
       fields: [
         { key: 'name', label: 'Product Name', sortable: true, sortDirection: 'desc' },
         { key: 'sales', label: 'Sales No', sortable: true, class: 'text-center' },
@@ -183,8 +170,8 @@ export default {
   },
   async mounted () {
     await this.fetchProducts()
-    // Set the initial number of items
-    this.totalRows = this.items.length
+    // Set the initial number of products
+    this.totalRows = this.products.length
   },
   methods: {
     confirmDeleteRow (item, index) {
@@ -192,11 +179,11 @@ export default {
       this.$bvModal.show('confirm-delete-modal')
     },
     deleteRow (index) {
-      this.items.splice(index, 1)
+      this.products.splice(index, 1)
       // TODO - send delete to server
     },
     commitEdit (newItem, index) {
-      this.items[index] = { sales: newItem.sales, name: newItem.name }
+      this.products[index] = { sales: newItem.sales, name: newItem.name }
       // TODO - update to server
     },
     makeEdit (item, index) {
@@ -207,9 +194,9 @@ export default {
       this.infoModal = { item, index }
       this.$bvModal.show('info-modal')
     },
-    onFiltered (filteredItems) {
+    onFiltered (filteredProducts) {
       // Trigger pagination to update the number of buttons/psaless due to filtering
-      this.totalRows = filteredItems.length
+      this.totalRows = filteredProducts.length
       this.currentPsales = 1
     },
     filterByDate (option) {
@@ -238,7 +225,7 @@ export default {
           query: FETCHPRODUCTS
         })
         .then(({ data }) => {
-          console.log(data)
+          this.products = data.products
         })
         .catch((error) => {
           this.errors = error.graphQLErrors.map(error => error)
