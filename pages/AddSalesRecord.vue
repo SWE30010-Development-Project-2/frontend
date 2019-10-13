@@ -59,6 +59,7 @@ import Product from '~/components/Product.vue'
 import Navbar from '~/components/Navbar.vue'
 import AddedItem from '~/components/AddedItem.vue'
 import ItemListText from '~/components/ItemListText.vue'
+import FETCHPRODUCTS from '~/graphql/product/FETCHPRODUCTS.gql'
 
 export default {
   components: {
@@ -68,18 +69,7 @@ export default {
   data () {
     return {
       items: [],
-      products: [
-        { name: 'Paracetamol', img: '/images/paracetamol.jpg', barcode: '931001244534' },
-        { name: 'Sambucol', img: '/images/sambucol.jpg', barcode: '124499953403' },
-        { name: 'Xanax', img: '/images/xanax.jpg', barcode: '124454444333' },
-        { name: 'Glucophage', img: '/images/placeholder.jpg', barcode: '454943112345' },
-        { name: 'Amoxil', img: '/images/placeholder.jpg', barcode: '000000000112' },
-        { name: 'Lipitor', img: '/images/placeholder.jpg', barcode: '000333300112' },
-        { name: 'Zofran', img: '/images/placeholder.jpg', barcode: '069693808812' },
-        { name: 'Panadol', img: '/images/placeholder.jpg', barcode: '777788880000' },
-        { name: 'Vicodin', img: '/images/placeholder.jpg', barcode: '555500226688' },
-        { name: 'Neurontin', img: '/images/placeholder.jpg', barcode: '556600225656' }
-      ],
+      products: [],
       search: ''
     }
   },
@@ -94,6 +84,9 @@ export default {
         search.includes(name) || search.includes(barcode)
       })
     }
+  },
+  async mounted () {
+    await this.fetchProducts()
   },
   methods: {
     addItem (name) {
@@ -129,6 +122,15 @@ export default {
         variant: 'primary',
         solid: true
       })
+    },
+    async fetchProducts () {
+      await this.$apollo
+        .query({
+          query: FETCHPRODUCTS
+        })
+        .then(({ data }) => {
+          this.products = data.products
+        })
     }
   }
 }
