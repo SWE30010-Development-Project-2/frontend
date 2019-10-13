@@ -1,7 +1,6 @@
 mutation AddProduct ($name: String!, $description: String, $barcode: String, $price: Float!) {
     addProduct(name: $name, description: $description, barcode: $barcode, price: $price)
     {
-        # id
         name
         description
         barcode

@@ -1,0 +1,10 @@
+mutation AddProduct ($id: String!) {
+    removeProduct(id: $id)
+    {
+        id
+        name
+        description
+        barcode
+        price
+    }
+}

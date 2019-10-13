@@ -7,7 +7,7 @@
       :item="{ sales: confirmDeleteModal.item.sales, name: confirmDeleteModal.item.name}"
       :index="confirmDeleteModal.index"
       :item-property-labels="{ sales: 'Sales No', name: 'Product Name' }"
-      @confirm-deletion="deleteRow(confirmDeleteModal.index)"
+      @confirm-deletion="deleteRow(confirmDeleteModal.item.id)"
     />
     <!-- Edit Modal -->
     <edit-modal
@@ -38,37 +38,6 @@
         <b-col lg="6" class="my-1">
           <filter-control :filter="filter" @input="filter = $event" />
         </b-col>
-
-        <b-col sm="5" md="6" class="my-1">
-          <b-form-group
-            label="Per psales"
-            label-cols-sm="6"
-            label-cols-md="4"
-            label-cols-lg="3"
-            label-align-sm="right"
-            label-size="sm"
-            label-for="perPsalesSelect"
-            class="mb-0"
-          >
-            <b-form-select
-              id="perPsalesSelect"
-              v-model="perPsales"
-              size="sm"
-              :options="psalesOptions"
-            />
-          </b-form-group>
-        </b-col>
-
-        <b-col sm="7" md="6" class="my-1">
-          <b-pagination
-            v-model="currentPsales"
-            :total-rows="totalRows"
-            :per-psales="perPsales"
-            align="fill"
-            size="sm"
-            class="my-0"
-          />
-        </b-col>
       </b-row>
 
       <!-- Main table element -->
@@ -88,13 +57,13 @@
         @filtered="onFiltered"
       >
         <template v-slot:cell(actions)="row">
-          <b-button size="sm" class="mr-1" @click="showInfo(row.item, row.index)">
+          <b-button variant="info" size="sm" class="mr-1" @click="showInfo(row.item, row.index)">
             Info
           </b-button>
-          <b-button size="sm" class="mr-1" @click="makeEdit(row.item, row.index)">
+          <b-button variant="primary" size="sm" class="mr-1" @click="makeEdit(row.item, row.index)">
             Edit
           </b-button>
-          <b-button size="sm" @click="confirmDeleteRow(row.item, row.index)">
+          <b-button variant="danger" size="sm" @click="confirmDeleteRow(row.item, row.index)">
             Delete
           </b-button>
         </template>
@@ -122,6 +91,7 @@ import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import EditModal from '~/components/EditModal.vue'
 import InfoModal from '~/components/InfoModal.vue'
 import FETCHPRODUCTS from '~/graphql/product/FETCHPRODUCTS.gql'
+import REMOVE_PRODUCT from '~/graphql/product/REMOVE_PRODUCT.gql'
 
 export default {
   components: {
@@ -146,15 +116,15 @@ export default {
       filterOn: [],
       editModal: {
         index: null,
-        item: { sales: 0, name: '' }
+        item: { }
       },
       confirmDeleteModal: {
         index: null,
-        item: { sales: 0, name: '' }
+        item: { }
       },
       infoModal: {
         index: null,
-        item: { name: '', info: '' }
+        item: { }
       }
     }
   },
@@ -171,16 +141,21 @@ export default {
   async mounted () {
     await this.fetchProducts()
     // Set the initial number of products
-    this.totalRows = this.products.length
   },
   methods: {
     confirmDeleteRow (item, index) {
       this.confirmDeleteModal = { item, index }
       this.$bvModal.show('confirm-delete-modal')
     },
-    deleteRow (index) {
-      this.products.splice(index, 1)
-      // TODO - send delete to server
+    async deleteRow (id) {
+      // Remove localy
+      this.products = this.products.filter(product => product.id !== id)
+
+      // Remove from server
+      await this.$apollo.mutate({
+        mutation: REMOVE_PRODUCT,
+        variables: { id }
+      })
     },
     commitEdit (newItem, index) {
       this.products[index] = { sales: newItem.sales, name: newItem.name }
