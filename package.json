@@ -26,6 +26,7 @@
     "moment-range": "^4.0.2",
     "nuxt": "^2.0.0",
     "vue-chartjs": "^3.4.2",
+    "vue-json-csv": "^1.2.8",
     "vue-loading-overlay": "^3.2.0"
   },
   "devDependencies": {
