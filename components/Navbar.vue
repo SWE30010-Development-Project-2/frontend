@@ -22,7 +22,16 @@
       <b-nav-item href="/salesstatistics">
         Sales Statistics
       </b-nav-item>
+
+      <!--<b-nav-item :href="'/user/' + user.username">-->
+          <!--{{ user.username }}-->
+          <!--<img height="30px" :src="user.avatar" />-->
+      <!--</b-nav-item>-->
     </b-navbar-nav>
+      <span v-show="user != null" style="color: #ffffff; margin-left: 30%">
+        {{ user.username }}
+        <img height="32px" style="border-radius: 5px" :src="user.avatar" />
+      </span>
   </b-navbar>
 </template>
 
@@ -33,6 +42,8 @@
 </style>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     title: {
@@ -40,6 +51,11 @@ export default {
       default: null,
       required: true
     }
+  },
+  computed: {
+    ...mapGetters({
+      user: 'auth/user'
+    })
   }
 }
 </script>

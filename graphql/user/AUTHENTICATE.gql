@@ -2,8 +2,10 @@ query($email: String!, $password: String!) {
   authenticate(email: $email, password: $password) {
     token
     user {
+      id
       email
       username
+      avatar
     }
   }
 }

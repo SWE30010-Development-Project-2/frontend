@@ -31,7 +31,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/vue-overlay'
+    '~/plugins/vue-overlay',
+    '~/plugins/persist-state'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -63,6 +64,10 @@ module.exports = {
         httpEndpoint: 'http://localhost:9000/graphql'
       }
     }
+  },
+
+  router: {
+    middleware: 'check-auth'
   },
 
   /*

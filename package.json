@@ -26,7 +26,8 @@
     "moment-range": "^4.0.2",
     "nuxt": "^2.0.0",
     "vue-chartjs": "^3.4.2",
-    "vue-loading-overlay": "^3.2.0"
+    "vue-loading-overlay": "^3.2.0",
+    "vuex-persistedstate": "^2.5.4"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^1.0.1",
