@@ -3,10 +3,15 @@
     <b-button @click="addProducts()">
       Add Products
     </b-button>
+    <b-button @click="addUser()">
+      Add User - User: admin, email: admin@email.net, PWD: 1234
+    </b-button>
   </div>
 </template>
 <script>
 import ADD_PRODUCT from '~/graphql/product/ADD_PRODUCT.gql'
+import ADD_USER from '~/graphql/user/ADD_USER.gql'
+
 export default {
   data () {
     return {
@@ -37,6 +42,16 @@ export default {
           }
         })
       }
+    },
+    async addUser () {
+      await this.$apollo.mutate({
+        mutation: ADD_USER,
+        variables: {
+          username: 'admin',
+          email: 'admin@email.net',
+          password: '1234'
+        }
+      })
     }
   }
 }

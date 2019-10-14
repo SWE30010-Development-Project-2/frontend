@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="align-items-center border-top pt-3 pb-3">
-            <b-button variant="primary" class="text-nowrap w-100" :disabled="items.length === 0" @click="recordSale()">
+            <b-button v-if="user != null" variant="primary" class="text-nowrap w-100" :disabled="items.length === 0" @click="recordSale()">
               Record Sale
             </b-button>
           </div>
@@ -55,6 +55,7 @@ html {
 </style>
 
 <script>
+import { mapGetters } from 'vuex'
 import Product from '~/components/Product.vue'
 import Navbar from '~/components/Navbar.vue'
 import AddedItem from '~/components/AddedItem.vue'
@@ -84,7 +85,10 @@ export default {
         return name.includes(search) || barcode.includes(search) ||
         search.includes(name) || search.includes(barcode)
       })
-    }
+    },
+    ...mapGetters({
+      user: 'auth/user'
+    })
   },
   async mounted () {
     await this.fetchProducts()
@@ -100,10 +104,14 @@ export default {
     },
     async recordSale () {
       const ids = this.items.map(item => item.id)
+
       // Send to server
       await this.$apollo.mutate({
         mutation: ADD_SALE,
-        variables: { products: ids }
+        variables: {
+          products: ids,
+          employee: this.user.id
+        }
       })
       // Display Message
       this.notifySaleRecorded()
