@@ -1,18 +1,25 @@
 <template>
   <div>
-    <b-button @click="addProducts()">
-      Add Products
-    </b-button>
-    <b-button @click="addUser()">
-      Add User - User: admin, email: admin@email.net, PWD: 1234
-    </b-button>
+    <navbar title="Debug Page" />
+    <div>
+      <b-button @click="addProducts()">
+        Add Products
+      </b-button>
+      <b-button @click="addUser()">
+        Add User - User: admin, email: admin@email.net, PWD: 1234
+      </b-button>
+    </div>
   </div>
 </template>
 <script>
 import ADD_PRODUCT from '~/graphql/product/ADD_PRODUCT.gql'
 import ADD_USER from '~/graphql/user/ADD_USER.gql'
+import Navbar from '~/components/Navbar.vue'
 
 export default {
+  components: {
+    Navbar
+  },
   data () {
     return {
       products: [
@@ -48,7 +55,7 @@ export default {
         mutation: ADD_USER,
         variables: {
           username: 'admin',
-          email: 'admin@email.net',
+          email: 'admin@mail.com',
           password: '1234'
         }
       })
