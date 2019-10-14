@@ -28,7 +28,7 @@
           <!--<img height="30px" :src="user.avatar" />-->
       <!--</b-nav-item>-->
     </b-navbar-nav>
-      <span v-show="user != null" style="color: #ffffff; margin-left: 30%">
+      <span v-if="user != null" @click="logout()" style="color: #ffffff; margin-left: 30%">
         {{ user.username }}
         <img height="32px" style="border-radius: 5px" :src="user.avatar" />
       </span>
@@ -56,6 +56,11 @@ export default {
     ...mapGetters({
       user: 'auth/user'
     })
+  },
+  methods: {
+    logout () {
+      this.$store.commit('auth/LOGOUT')
+    }
   }
 }
 </script>
