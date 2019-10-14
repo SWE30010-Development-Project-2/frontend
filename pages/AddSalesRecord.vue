@@ -60,6 +60,7 @@ import Navbar from '~/components/Navbar.vue'
 import AddedItem from '~/components/AddedItem.vue'
 import ItemListText from '~/components/ItemListText.vue'
 import FETCHPRODUCTS from '~/graphql/product/FETCHPRODUCTS.gql'
+import ADD_SALE from '~/graphql/sale/ADD_SALE.gql'
 
 export default {
   components: {
@@ -97,9 +98,13 @@ export default {
         list[0].qty++
       }
     },
-    recordSale () {
+    async recordSale () {
+      const ids = this.items.map(item => item.id)
       // Send to server
-
+      await this.$apollo.mutate({
+        mutation: ADD_SALE,
+        variables: { products: ids }
+      })
       // Display Message
       this.notifySaleRecorded()
 

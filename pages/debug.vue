@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-button @click="init()">
-      Init the database
+    <b-button @click="addProducts()">
+      Add Products
     </b-button>
   </div>
 </template>
@@ -25,7 +25,7 @@ export default {
     }
   },
   methods: {
-    async init () {
+    async addProducts () {
       for (const product of this.products) {
         await this.$apollo.mutate({
           mutation: ADD_PRODUCT,

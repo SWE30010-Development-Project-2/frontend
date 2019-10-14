@@ -1,0 +1,6 @@
+mutation AddTransaction ($products: [ID]) {
+    addTransaction(products: $products)
+    {
+        id
+    }
+}

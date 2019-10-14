@@ -32,7 +32,7 @@
           </b-button>
         </b-col>
       </b-row>
-      <b-row>
+      <b-row class="pb-4">
         <b-col cols="4">
           <b-button href="/salesstatistics" variant="outline-danger" class="w-100">
             <font-awesome-icon icon="chart-line" class="w-100 mt-4 mb-4 big-icon" />
