@@ -139,9 +139,8 @@ export default {
         })
     }
   },
-  async mounted () {
-    await this.fetchProducts()
-    // Set the initial number of products
+  mounted () {
+    setTimeout(async () => { await this.fetchProducts() }, 200)
   },
   methods: {
     confirmDeleteRow (item, index) {

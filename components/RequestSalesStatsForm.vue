@@ -172,8 +172,8 @@ export default {
       })
     }
   },
-  async mounted () {
-    await this.fetchProducts()
+  mounted () {
+    setTimeout(async () => { await this.fetchProducts() }, 200)
   },
   methods: {
     generateReport () {

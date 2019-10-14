@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="align-items-center border-top pt-3 pb-3">
-            <b-button variant="primary" class="text-nowrap w-100" :disabled="items.length === 0 /*|| user===null*/" @click="recordSale()">
+            <b-button variant="primary" class="text-nowrap w-100" :disabled="items.length === 0 || user===null" @click="recordSale()">
               Record Sale
             </b-button>
           </div>
@@ -90,8 +90,8 @@ export default {
       user: 'auth/user'
     })
   },
-  async mounted () {
-    await this.fetchProducts()
+  mounted () {
+    setTimeout(async () => { await this.fetchProducts() }, 200)
   },
   methods: {
     addItem (name, id) {
@@ -110,7 +110,7 @@ export default {
         mutation: ADD_SALE,
         variables: {
           products: ids,
-          employee: 'admin' // this.user.id
+          employee: this.user.id
         }
       })
       // Display Message
