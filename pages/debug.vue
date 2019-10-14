@@ -6,7 +6,7 @@
         Add Products
       </b-button>
       <b-button @click="addUser()">
-        Add User - User: admin, email: admin@email.net, PWD: 1234
+        Add User - User: admin, email: admin@mail.com, PWD: 1234
       </b-button>
     </div>
   </div>

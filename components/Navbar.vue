@@ -22,16 +22,18 @@
       <b-nav-item href="/salesstatistics">
         Sales Statistics
       </b-nav-item>
-
-      <!--<b-nav-item :href="'/user/' + user.username">-->
-          <!--{{ user.username }}-->
-          <!--<img height="30px" :src="user.avatar" />-->
-      <!--</b-nav-item>-->
     </b-navbar-nav>
-      <span v-if="user != null" @click="logout()" style="color: #ffffff; margin-left: 30%">
+    <b-navbar-nav class="ml-auto">
+      <b-nav-item v-if="user != null" @click="logout()">
         {{ user.username }}
-        <img height="32px" style="border-radius: 5px" :src="user.avatar" />
-      </span>
+        <b-img
+          rounded
+          height="32px"
+          :src="user.avatar"
+          :alt="user.username"
+        />
+      </b-nav-item>
+    </b-navbar-nav>
   </b-navbar>
 </template>
 
