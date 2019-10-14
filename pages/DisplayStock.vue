@@ -4,18 +4,18 @@
     <!-- Confirm Delete Modal -->
     <confirm-delete-modal
       id="confirm-delete-modal"
-      :item="{ sales: confirmDeleteModal.item.sales, name: confirmDeleteModal.item.name}"
+      :item="{ name: confirmDeleteModal.item.name}"
       :index="confirmDeleteModal.index"
-      :item-property-labels="{ sales: 'Sales No', name: 'Product Name' }"
+      :item-property-labels="{ name: 'Product Name' }"
       @confirm-deletion="deleteRow(confirmDeleteModal.item.id)"
     />
     <!-- Edit Modal -->
     <edit-modal
       id="edit-modal"
-      :item="{ sales: editModal.item.sales, name: editModal.item.name, description: editModal.item.description, price: editModal.item.price, barcode: editModal.item.barcode}"
+      :item="{ name: editModal.item.name, description: editModal.item.description, price: editModal.item.price, barcode: editModal.item.barcode}"
       :index="editModal.index"
-      :item-property-labels="{ sales: 'Sales No', name: 'Product Name', description: 'Description', price: 'Price', barcode: 'Barcode' }"
-      @commitEdit="commitEdit($event)"
+      :item-property-labels="{ name: 'Product Name', description: 'Description', price: 'Price', barcode: 'Barcode' }"
+      @commitEdit="commitEdit(editModal.item.id, $event)"
     />
     <!-- Info Modal -->
     <info-modal
@@ -103,7 +103,7 @@ export default {
       products: [],
       fields: [
         { key: 'name', label: 'Product Name', sortable: true, sortDirection: 'desc' },
-        { key: 'sales', label: 'Sales No', sortable: true, class: 'text-center' },
+        { key: 'price', label: 'Price', sortable: true, class: 'text-center', formatter: (value, key, item) => '$' + value.toFixed(2) },
         { key: 'actions', label: 'Actions' }
       ],
       totalRows: 1,
@@ -139,9 +139,8 @@ export default {
         })
     }
   },
-  async mounted () {
-    await this.fetchProducts()
-    // Set the initial number of products
+  mounted () {
+    setTimeout(async () => { await this.fetchProducts() }, 200)
   },
   methods: {
     confirmDeleteRow (item, index) {
@@ -149,7 +148,7 @@ export default {
       this.$bvModal.show('confirm-delete-modal')
     },
     async deleteRow (id) {
-      // Remove localy
+      // Remove locally
       this.products = this.products.filter(product => product.id !== id)
 
       // Remove from server
@@ -158,18 +157,19 @@ export default {
         variables: { id }
       })
     },
-    async commitEdit (newProduct) {
-      // this.products.filter(product => product.id === id ). = newProduct
-      // this.products[id] = newProduct
+    async commitEdit (id, newProduct) {
+      // Update locally
+      this.products = this.products.filter(product => product.id !== id)
+      this.products.push({ id, ...newProduct })
 
       // Update to server
       await this.$apollo.mutate({
         mutation: UPDATE_PRODUCT,
         variables: {
-          id: newProduct.id,
+          id,
           name: newProduct.name,
           description: newProduct.description,
-          price: newProduct.price,
+          price: Number(newProduct.price),
           barcode: newProduct.barcode
         }
       })

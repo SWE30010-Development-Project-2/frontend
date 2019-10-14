@@ -11,7 +11,7 @@
           </b-form-row>
           <b-row>
             <b-col v-for="product in filteredProducts" :key="product.name" cols="4" lg="3">
-              <product :name="product.name" :img-src="product.img" :barcode="product.barcode" @click="addItem(product.name)" />
+              <product :name="product.name" :img-src="product.img" :barcode="product.barcode" @click="addItem(product.name, product.id)" />
             </b-col>
           </b-row>
         </b-col>
@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="align-items-center border-top pt-3 pb-3">
-            <b-button variant="primary" class="text-nowrap w-100" :disabled="items.length === 0" @click="recordSale()">
+            <b-button variant="primary" class="text-nowrap w-100" :disabled="items.length === 0 || user===null" @click="recordSale()">
               Record Sale
             </b-button>
           </div>
@@ -55,6 +55,7 @@ html {
 </style>
 
 <script>
+import { mapGetters } from 'vuex'
 import Product from '~/components/Product.vue'
 import Navbar from '~/components/Navbar.vue'
 import AddedItem from '~/components/AddedItem.vue'
@@ -84,26 +85,33 @@ export default {
         return name.includes(search) || barcode.includes(search) ||
         search.includes(name) || search.includes(barcode)
       })
-    }
+    },
+    ...mapGetters({
+      user: 'auth/user'
+    })
   },
-  async mounted () {
-    await this.fetchProducts()
+  mounted () {
+    setTimeout(async () => { await this.fetchProducts() }, 200)
   },
   methods: {
-    addItem (name) {
+    addItem (name, id) {
       const list = this.items.filter(item => (item.name === name))
       if (list.length === 0) {
-        this.items.push({ name, qty: 1 })
+        this.items.push({ name, id, qty: 1 })
       } else {
         list[0].qty++
       }
     },
     async recordSale () {
       const ids = this.items.map(item => item.id)
+
       // Send to server
       await this.$apollo.mutate({
         mutation: ADD_SALE,
-        variables: { products: ids }
+        variables: {
+          products: ids,
+          employee: this.user.id
+        }
       })
       // Display Message
       this.notifySaleRecorded()

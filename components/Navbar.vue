@@ -23,6 +23,17 @@
         Sales Statistics
       </b-nav-item>
     </b-navbar-nav>
+    <b-navbar-nav class="ml-auto">
+      <b-nav-item v-if="user != null" @click="logout()">
+        {{ user.username }}
+        <b-img
+          rounded
+          height="32px"
+          :src="user.avatar"
+          :alt="user.username"
+        />
+      </b-nav-item>
+    </b-navbar-nav>
   </b-navbar>
 </template>
 
@@ -33,12 +44,24 @@
 </style>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     title: {
       type: String,
       default: null,
       required: true
+    }
+  },
+  computed: {
+    ...mapGetters({
+      user: 'auth/user'
+    })
+  },
+  methods: {
+    logout () {
+      this.$store.commit('auth/LOGOUT')
     }
   }
 }

@@ -19,4 +19,8 @@ $ npm run start
 $ npm run generate
 ```
 
+## Login
+jordypee27@gmail.com
+password
+
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).

@@ -64,11 +64,9 @@ export default {
   methods: {
     async login () {
       this.errors = []
-
       const loading = this.$loading.show({
         container: this.$refs.loginContainer
       })
-
       await this.$apollo
         .query({
           query: AUTHENTICATE,
@@ -78,11 +76,16 @@ export default {
           }
         })
         .then(({ data }) => {
-          this.$apolloHelpers.onLogin(data.authenticate.token)
+          this.$store.commit('auth/LOGIN', {
+            token: data.authenticate.token,
+            user: data.authenticate.user
+          })
           this.$router.push('/')
           loading.hide()
         })
         .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.log(error)
           this.errors = error.graphQLErrors.map(error => error)
           loading.hide()
         })
