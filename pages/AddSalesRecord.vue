@@ -11,7 +11,7 @@
           </b-form-row>
           <b-row>
             <b-col v-for="product in filteredProducts" :key="product.name" cols="4" lg="3">
-              <product :name="product.name" :img-src="product.img" :barcode="product.barcode" @click="addItem(product.name)" />
+              <product :name="product.name" :img-src="product.img" :barcode="product.barcode" @click="addItem(product.name, product.id)" />
             </b-col>
           </b-row>
         </b-col>
@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="align-items-center border-top pt-3 pb-3">
-            <b-button v-if="user != null" variant="primary" class="text-nowrap w-100" :disabled="items.length === 0" @click="recordSale()">
+            <b-button variant="primary" class="text-nowrap w-100" :disabled="items.length === 0 /*|| user===null*/" @click="recordSale()">
               Record Sale
             </b-button>
           </div>
@@ -94,10 +94,10 @@ export default {
     await this.fetchProducts()
   },
   methods: {
-    addItem (name) {
+    addItem (name, id) {
       const list = this.items.filter(item => (item.name === name))
       if (list.length === 0) {
-        this.items.push({ name, qty: 1 })
+        this.items.push({ name, id, qty: 1 })
       } else {
         list[0].qty++
       }
@@ -110,7 +110,7 @@ export default {
         mutation: ADD_SALE,
         variables: {
           products: ids,
-          employee: this.user.id
+          employee: 'admin' // this.user.id
         }
       })
       // Display Message
