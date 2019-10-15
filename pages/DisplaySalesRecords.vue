@@ -6,9 +6,10 @@
       id="confirm-delete-modal"
       :item="confirmDeleteModal.item"
       :index="confirmDeleteModal.index"
-      :item-property-labels="{ TransactionNo: 'Transaction Code', price: 'Cost of Sale', NoItems: 'No of Items', time: 'Time of Sale' }"
+      :item-property-labels="{ time: 'Time of Sale', NoItems: 'No of Items', price: 'Cost of Sale', itemsSold: 'Items Sold' }"
       @confirm-deletion="deleteRow(confirmDeleteModal.index)"
     />
+
     <!-- Edit Modal -->
     <edit-modal
       id="edit-modal"
@@ -16,6 +17,14 @@
       :index="editModal.index"
       :item-property-labels="{ TransactionNo: 'Transaction Code', price: 'Cost of Sale', NoItems: 'No of Items', time: 'Time of Sale' }"
       @commitEdit="commitEdit($event,editModal.index)"
+    />
+
+    <!-- Info Modal -->
+    <info-modal
+      id="info-modal"
+      :item="infoModal.item"
+      :index="infoModal.index"
+      :item-property-labels="{ time: 'Time of Sale', NoItems: 'No of Items', price: 'Cost of Sale', itemsSold: 'Items Sold' }"
     />
 
     <!-- Page -->
@@ -56,10 +65,13 @@
           </template>
 
           <template v-slot:cell(actions)="row">
-            <b-button size="sm" @click="editInfo(row.item, row.index)">
+            <b-button variant="info" size="sm" class="mr-1" @click="showInfo(row.item, row.index)">
+              Info
+            </b-button>
+            <b-button variant="primary" size="sm" @click="editInfo(row.item, row.index)">
               Edit
             </b-button>
-            <b-button size="sm" @click="confirmDeleteRow(row.item, row.index)">
+            <b-button variant="danger" size="sm" @click="confirmDeleteRow(row.item, row.index)">
               Delete
             </b-button>
           </template>
@@ -90,10 +102,11 @@ import FilterControl from '~/components/FilterControl.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import EditModal from '~/components/EditModal.vue'
 import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
+import InfoModal from '~/components/InfoModal.vue'
 
 export default {
   components: {
-    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal
+    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal, InfoModal
   },
   data () {
     return {
@@ -121,7 +134,11 @@ export default {
       },
       confirmDeleteModal: {
         index: null,
-        item: { TransactionNo: -1, price: -1, NoItems: -1, time: '' }
+        item: { }
+      },
+      infoModal: {
+        index: null,
+        item: { }
       }
     }
   },
@@ -183,14 +200,18 @@ export default {
       this.editModal = { item: niceitem, index }
       this.$bvModal.show('edit-modal')
     },
+    showInfo (item, index) {
+      this.infoModal = { item, index }
+      this.$bvModal.show('info-modal')
+    },
     onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/pprices due to filtering
       this.totalRows = filteredItems.length
       this.currentPprice = 1
     },
     confirmDeleteRow (item, index) {
-      const niceitem = { TransactionNo: item.TransactionNo, price: item.price.cost, NoItems: item.NoItems, time: item.time }
-      this.confirmDeleteModal = { item: niceitem, index }
+      // const niceitem = { TransactionNo: item.TransactionNo, price: item.price.cost, NoItems: item.NoItems, time: item.time }
+      this.confirmDeleteModal = { item, index }
       this.$bvModal.show('confirm-delete-modal')
     },
     deleteRow (index) {

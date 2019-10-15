@@ -1,8 +1,8 @@
 <template>
   <b-modal :id="id" title="Confirm Delete">
     <p>Are you sure you would like to delete this item?</p>
-    <p v-for="(property, propertyName) in item" :key="propertyName">
-      <strong>{{ itemPropertyLabels[propertyName] }}: </strong>{{ property }}
+    <p v-for="(property, propertyName) in itemPropertyLabels" :key="propertyName">
+      <strong>{{ itemPropertyLabels[propertyName] }}: </strong>{{ item[propertyName] }}
     </p>
     <div slot="modal-footer">
       <b-button variant="danger" @click="$bvModal.hide(id); $emit('confirm-deletion')">

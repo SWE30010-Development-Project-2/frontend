@@ -22,7 +22,7 @@
       id="info-modal"
       :item="infoModal.item"
       :index="infoModal.index"
-      :item-property-labels="{ name: 'Product Name', description: 'Description' }"
+      :item-property-labels="{ name: 'Product Name', description: 'Description', price: 'Price', barcode: 'Barcode' }"
     />
     <!-- Page -->
     <navbar title="Display Stock" />

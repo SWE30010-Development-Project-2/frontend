@@ -1,10 +1,10 @@
 <template>
   <b-modal :id="id" title="Medicine Information">
-    <p>Name: {{ item.name }}</p>
-    <p>Description: {{ item.description }}</p>
+    <p v-for="(property, propertyName) in itemPropertyLabels" :key="propertyName">
+      <strong>{{ itemPropertyLabels[propertyName] }}: </strong>{{ item[propertyName] }}
     </p>
     <div slot="modal-footer">
-      <b-button variant="primary" @click="$bvModal.hide(id);">
+      <b-button variant="primary" @click="$bvModal.hide(id)">
         Done
       </b-button>
     </div>
