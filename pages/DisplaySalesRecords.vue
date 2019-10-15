@@ -15,7 +15,7 @@
       id="edit-modal"
       :item="editModal.item"
       :index="editModal.index"
-      :item-property-labels="{ TransactionNo: 'Transaction Code', price: 'Cost of Sale', NoItems: 'No of Items', time: 'Time of Sale' }"
+      :item-property-labels="{ }"
       @commitEdit="commitEdit($event,editModal.index)"
     />
 
@@ -58,7 +58,6 @@
           :sort-by.sync="sortBy"
           :sort-desc.sync="sortDesc"
           :sort-direction="sortDirection"
-          @filtered="onFiltered"
         >
           <template v-slot:cell(price)="row">
             $ {{ row.value.toFixed(2) }}
@@ -189,9 +188,6 @@ export default {
     }
   },
   mounted () {
-    // // Set the initial number of items
-    // this.totalRows = this.items.length
-
     setTimeout(async () => { await this.fetchTransactions() }, 200)
   },
   methods: {
@@ -204,13 +200,7 @@ export default {
       this.infoModal = { item, index }
       this.$bvModal.show('info-modal')
     },
-    onFiltered (filteredItems) {
-      // Trigger pagination to update the number of buttons/pprices due to filtering
-      this.totalRows = filteredItems.length
-      this.currentPprice = 1
-    },
     confirmDeleteRow (item, index) {
-      // const niceitem = { TransactionNo: item.TransactionNo, price: item.price.cost, NoItems: item.NoItems, time: item.time }
       this.confirmDeleteModal = { item, index }
       this.$bvModal.show('confirm-delete-modal')
     },
