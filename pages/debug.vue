@@ -5,6 +5,9 @@
       <b-button @click="addProducts()">
         Add Products
       </b-button>
+      <b-button @click="addSales()">
+        Add Some Sample Sales Records
+      </b-button>
       <b-button @click="addUser()">
         Add User - User: admin, email: admin@mail.com, PWD: 1234
       </b-button>
@@ -12,9 +15,12 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import ADD_PRODUCT from '~/graphql/product/ADD_PRODUCT.gql'
 import ADD_USER from '~/graphql/user/ADD_USER.gql'
+import ADD_TRANSACTION from '~/graphql/sale/ADD_TRANSACTION.gql'
 import Navbar from '~/components/Navbar.vue'
+import FETCHPRODUCTS from '~/graphql/product/FETCHPRODUCTS.gql'
 
 export default {
   components: {
@@ -36,6 +42,11 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapGetters({
+      user: 'auth/user'
+    })
+  },
   methods: {
     async addProducts () {
       for (const product of this.products) {
@@ -49,6 +60,25 @@ export default {
           }
         })
       }
+    },
+    async addSales () {
+      let products = []
+
+      await this.$apollo
+        .query({
+          query: FETCHPRODUCTS
+        })
+        .then(({ data }) => {
+          products = data.products
+        })
+
+      await this.$apollo.mutate({
+        mutation: ADD_TRANSACTION,
+        variables: {
+          products: products.map(product => product.id),
+          employee: this.user.id
+        }
+      })
     },
     async addUser () {
       await this.$apollo.mutate({

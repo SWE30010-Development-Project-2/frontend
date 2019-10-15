@@ -61,7 +61,7 @@ import Navbar from '~/components/Navbar.vue'
 import AddedItem from '~/components/AddedItem.vue'
 import ItemListText from '~/components/ItemListText.vue'
 import FETCHPRODUCTS from '~/graphql/product/FETCHPRODUCTS.gql'
-import ADD_SALE from '~/graphql/sale/ADD_SALE.gql'
+import ADD_TRANSACTION from '~/graphql/sale/ADD_TRANSACTION.gql'
 
 export default {
   components: {
@@ -107,7 +107,7 @@ export default {
 
       // Send to server
       await this.$apollo.mutate({
-        mutation: ADD_SALE,
+        mutation: ADD_TRANSACTION,
         variables: {
           products: ids,
           employee: this.user.id

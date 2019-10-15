@@ -1,4 +1,4 @@
-mutation AddTransaction ($employee: String, $products: [ID]) {
+mutation AddTransaction ($employee: ID!, $products: [ID!]!) {
     addTransaction(products: $products, employee: $employee)
     {
         id
