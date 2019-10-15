@@ -39,7 +39,7 @@
           show-empty
           small
           stacked="md"
-          :items="items"
+          :items="transactions"
           :fields="fields"
           :current-psales="currentPsales"
           :per-psales="perPsales"
@@ -88,6 +88,7 @@ import SortControl from '~/components/SortControl.vue'
 import FilterControl from '~/components/FilterControl.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import EditModal from '~/components/EditModal.vue'
+import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
 
 export default {
   components: {
@@ -95,7 +96,8 @@ export default {
   },
   data () {
     return {
-      items: [
+      // transactionsRawData: [
+      transactions: [
         { TransactionNo: '1', price: { cost: 40 }, NoItems: 6, time: '23/09/2019 : 11:05' },
         { TransactionNo: '2', price: { cost: 40 }, NoItems: 4, time: '23/09/2019 : 12:06' },
         { TransactionNo: '3', price: { cost: 40 }, NoItems: 1, time: '23/09/2019 : 12:06' },
@@ -145,10 +147,21 @@ export default {
           return { text: f.label, value: f.key }
         })
     }
+    // transactions () {
+    //   return this.transactionsRawData.map(function (transaction) {
+    //     let NoItems = 0
+    //     if (transaction.products !== null) {
+    //       NoItems = transaction.products.length
+    //     }
+    //     return { NoItems }
+    //   })
+    // }
   },
   mounted () {
-    // Set the initial number of items
-    this.totalRows = this.items.length
+    // // Set the initial number of items
+    // this.totalRows = this.items.length
+
+    setTimeout(async () => { await this.fetchTransactions() }, 200)
   },
   methods: {
     editInfo (item, index) {
@@ -167,11 +180,11 @@ export default {
       this.$bvModal.show('confirm-delete-modal')
     },
     deleteRow (index) {
-      this.items.splice(index, 1)
+      this.transactions.splice(index, 1)
       // TODO - send delete to server
     },
     commitEdit (newItem, index) {
-      this.items[index] = { TransactionNo: newItem.TransactionNo, price: { cost: newItem.price }, NoItems: newItem.NoItems, time: newItem.time }
+      this.transactions[index] = { TransactionNo: newItem.TransactionNo, price: { cost: newItem.price }, NoItems: newItem.NoItems, time: newItem.time }
       // TODO - update to server
     },
     filterByDate (option) {
@@ -191,6 +204,16 @@ export default {
       } else if (option === 'year') {
         this.filter = yyyy
       }
+    },
+    async fetchTransactions () {
+      await this.$apollo
+        .query({
+          query: FETCH_TRANSACTIONS
+        })
+        .then(({ data }) => {
+          console.log(data)
+          this.transactionsRawData = data.transactions
+        })
     }
 
   }

@@ -1,0 +1,14 @@
+query FetchTransactions {
+    transactions {
+        id
+        products {
+            id
+            name
+            description
+            barcode
+            price
+        }
+        createdAt
+        updatedAt
+    }
+}
