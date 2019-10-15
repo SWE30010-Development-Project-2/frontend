@@ -7,7 +7,7 @@
       :item="confirmDeleteModal.item"
       :index="confirmDeleteModal.index"
       :item-property-labels="{ time: 'Time of Sale', NoItems: 'No of Items', price: 'Cost of Sale', itemsSoldLong: 'Items Sold' }"
-      @confirm-deletion="deleteRow(confirmDeleteModal.index)"
+      @confirm-deletion="deleteRow(confirmDeleteModal.item.id)"
     />
 
     <!-- Edit Modal -->
@@ -102,6 +102,7 @@ import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import EditModal from '~/components/EditModal.vue'
 import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
 import InfoModal from '~/components/InfoModal.vue'
+import REMOVE_TRANSACTION from '~/graphql/sale/REMOVE_TRANSACTION.gql'
 
 export default {
   components: {
@@ -213,9 +214,19 @@ export default {
       this.confirmDeleteModal = { item, index }
       this.$bvModal.show('confirm-delete-modal')
     },
-    deleteRow (index) {
-      this.transactions.splice(index, 1)
-      // TODO - send delete to server
+    // deleteRow (index) {
+    //   this.transactions.splice(index, 1)
+    //   // TODO - send delete to server
+    // },
+    async deleteRow (id) {
+      // Remove locally
+      this.transactionsRawData = this.transactionsRawData.filter(transaction => transaction.id !== id)
+
+      // Remove from server
+      await this.$apollo.mutate({
+        mutation: REMOVE_TRANSACTION,
+        variables: { id }
+      })
     },
     commitEdit (newItem, index) {
       this.transactions[index] = { TransactionNo: newItem.TransactionNo, price: { cost: newItem.price }, NoItems: newItem.NoItems, time: newItem.time }

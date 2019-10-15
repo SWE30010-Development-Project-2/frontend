@@ -1,4 +1,4 @@
-mutation AddProduct ($id: String!) {
+mutation RemoveProduct ($id: String!) {
     removeProduct(id: $id)
     {
         id
