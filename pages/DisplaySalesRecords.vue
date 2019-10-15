@@ -6,7 +6,7 @@
       id="confirm-delete-modal"
       :item="confirmDeleteModal.item"
       :index="confirmDeleteModal.index"
-      :item-property-labels="{ time: 'Time of Sale', NoItems: 'No of Items', price: 'Cost of Sale', itemsSold: 'Items Sold' }"
+      :item-property-labels="{ time: 'Time of Sale', NoItems: 'No of Items', price: 'Cost of Sale', itemsSoldLong: 'Items Sold' }"
       @confirm-deletion="deleteRow(confirmDeleteModal.index)"
     />
 
@@ -24,7 +24,7 @@
       id="info-modal"
       :item="infoModal.item"
       :index="infoModal.index"
-      :item-property-labels="{ time: 'Time of Sale', NoItems: 'No of Items', price: 'Cost of Sale', itemsSold: 'Items Sold' }"
+      :item-property-labels="{ time: 'Time of Sale', NoItems: 'No of Items', price: 'Cost of Sale', itemsSoldLong: 'Items Sold' }"
     />
 
     <!-- Page -->
@@ -183,7 +183,16 @@ export default {
           }
         }
 
-        return { NoItems, price, time, itemsSold, ...t }
+        // All items sold
+        let itemsSoldLong = ''
+        if (t.products != null) {
+          for (const p of t.products) {
+            itemsSoldLong += p.name + ', '
+          }
+          itemsSoldLong = itemsSoldLong.slice(0, -2)
+        }
+
+        return { NoItems, price, time, itemsSold, itemsSoldLong, ...t }
       })
     }
   },
