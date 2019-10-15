@@ -52,7 +52,7 @@
           @filtered="onFiltered"
         >
           <template v-slot:cell(price)="row">
-            $ {{ row.value.cost }}
+            $ {{ row.value.toFixed(2) }}
           </template>
 
           <template v-slot:cell(actions)="row">
@@ -82,6 +82,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import Navbar from '~/components/Navbar.vue'
 import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
 import SortControl from '~/components/SortControl.vue'
@@ -96,26 +97,12 @@ export default {
   },
   data () {
     return {
-      // transactionsRawData: [
-      transactions: [
-        { TransactionNo: '1', price: { cost: 40 }, NoItems: 6, time: '23/09/2019 : 11:05' },
-        { TransactionNo: '2', price: { cost: 40 }, NoItems: 4, time: '23/09/2019 : 12:06' },
-        { TransactionNo: '3', price: { cost: 40 }, NoItems: 1, time: '23/09/2019 : 12:06' },
-        { TransactionNo: '4', price: { cost: 40 }, NoItems: 1, time: '20/09/2019 : 12:06' },
-        { TransactionNo: '5', price: { cost: 40 }, NoItems: 1, time: '20/09/2019 : 12:06' },
-        { TransactionNo: '6', price: { cost: 40 }, NoItems: 7, time: '23/09/2019 : 12:06' },
-        { TransactionNo: '7', price: { cost: 40 }, NoItems: 8, time: '21/09/2019 : 12:06' },
-        { TransactionNo: '8', price: { cost: 40 }, NoItems: 99, time: '23/09/2019 : 12:06' },
-        { TransactionNo: '9', price: { cost: 40 }, NoItems: 100, time: '23/09/2019 : 12:06' },
-        { TransactionNo: '10', price: { cost: 40 }, NoItems: 5000, time: '22/09/2019 : 12:06' },
-        { TransactionNo: '11', price: { cost: 40 }, NoItems: 69, time: '21/09/2019 : 12:06' },
-        { TransactionNo: '12', price: { cost: 40 }, NoItems: 59, time: '21/09/2019 : 12:06' }
-      ],
+      transactionsRawData: [],
       fields: [
-        { key: 'TransactionNo', label: 'Transaction Code' },
-        { key: 'time', label: 'Time of Sale', sortable: true, class: 'text-center' },
-        { key: 'NoItems', label: 'No of Items', sortable: true, sortDirection: 'desc' },
-        { key: 'price', label: 'Cost of Sale', sortable: true, sortDirection: 'desc' },
+        { key: 'time', label: 'Time of Sale', sortable: true },
+        { key: 'NoItems', label: 'No of Items', sortable: true, sortDirection: 'desc', class: 'text-center' },
+        { key: 'price', label: 'Cost of Sale', sortable: true, sortDirection: 'desc', class: 'text-center' },
+        { key: 'itemsSold', label: 'Items Sold', class: 'text-left' },
         { key: 'actions', label: 'Actions' }
       ],
       totalRows: 1,
@@ -146,16 +133,43 @@ export default {
         .map((f) => {
           return { text: f.label, value: f.key }
         })
+    },
+    transactions () {
+      return this.transactionsRawData.map(function (t) {
+        // Number of items
+        let NoItems = 0
+        if (t.products != null) {
+          NoItems = t.products.length
+        }
+
+        // Price
+        let price = 0
+        if (t.products != null) {
+          for (const p of t.products) {
+            price += p.price
+          }
+        }
+
+        // Time of sale
+        const time = moment(Number(t.createdAt)).format('h:mm:ss a, DD/MM/YYYY')
+
+        // Items sold
+        let itemsSold = ''
+        const maxLength = 3
+        if (t.products != null) {
+          for (const p of t.products.slice(0, maxLength)) {
+            itemsSold += p.name + ', '
+          }
+          if (t.products.length > maxLength) {
+            itemsSold = itemsSold.slice(0, -2) + ' and ' + String(t.products.length - maxLength) + ' other items'
+          } else {
+            itemsSold = itemsSold.slice(0, -2)
+          }
+        }
+
+        return { NoItems, price, time, itemsSold, ...t }
+      })
     }
-    // transactions () {
-    //   return this.transactionsRawData.map(function (transaction) {
-    //     let NoItems = 0
-    //     if (transaction.products !== null) {
-    //       NoItems = transaction.products.length
-    //     }
-    //     return { NoItems }
-    //   })
-    // }
   },
   mounted () {
     // // Set the initial number of items

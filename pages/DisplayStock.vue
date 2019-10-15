@@ -56,6 +56,10 @@
         :sort-direction="sortDirection"
         @filtered="onFiltered"
       >
+        <template v-slot:cell(price)="row">
+          $ {{ row.value.toFixed(2) }}
+        </template>
+
         <template v-slot:cell(actions)="row">
           <b-button variant="info" size="sm" class="mr-1" @click="showInfo(row.item, row.index)">
             Info
@@ -103,7 +107,7 @@ export default {
       products: [],
       fields: [
         { key: 'name', label: 'Product Name', sortable: true, sortDirection: 'desc' },
-        { key: 'price', label: 'Price', sortable: true, class: 'text-center', formatter: (value, key, item) => '$' + value.toFixed(2) },
+        { key: 'price', label: 'Price', sortable: true, class: 'text-center' },
         { key: 'actions', label: 'Actions' }
       ],
       totalRows: 1,
