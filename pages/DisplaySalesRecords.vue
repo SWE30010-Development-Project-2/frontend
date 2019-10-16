@@ -4,18 +4,15 @@
     <!-- Confirm Delete Modal -->
     <confirm-delete-modal
       id="confirm-delete-modal"
-      :item="confirmDeleteModal.item"
+      :item="{ time: formatAsTime(confirmDeleteModal.item.createdAt), itemsSoldLong: confirmDeleteModal.item.itemsSoldLong }"
       :index="confirmDeleteModal.index"
       :item-property-labels="{ time: 'Time of Sale', itemsSoldLong: 'Items Sold' }"
       @confirm-deletion="deleteRow(confirmDeleteModal.item.id)"
     />
 
     <!-- Edit Modal -->
-    <edit-modal
-      id="edit-modal"
-      :item="editModal.item"
-      :index="editModal.index"
-      :item-property-labels="{ }"
+    <edit-transaction-modal
+      :transaction="editModal.item"
       @commitEdit="commitEdit($event,editModal.index)"
     />
 
@@ -25,10 +22,18 @@
     <!-- Page -->
     <navbar title="Display Sales Record" />
 
-    <time-selection-buttons @today="filterByDate('today')" @week="filterByDate('week')" @month="filterByDate('month')" @year="filterByDate('year')" />
-
     <b-container fluid>
       <!-- User Interface controls -->
+      <b-row class="mt-3 mb-3">
+        <b-col>
+          <time-selection-buttons @today="filterByDate('today')" @week="filterByDate('week')" @month="filterByDate('month')" @year="filterByDate('year')" />
+        </b-col>
+        <b-col cols="auto">
+          <b-button variant="warning" @click="exportToCSV(transactions)">
+            Export to CSV
+          </b-button>
+        </b-col>
+      </b-row>
       <b-row>
         <b-col lg="6" class="my-1">
           <sort-control :sort-value="{sortBy, sortDesc}" :sort-options="sortOptions" @input="sortBy = $event.sortBy; sortDesc=$event.sortDesc" />
@@ -55,7 +60,11 @@
           :sort-direction="sortDirection"
         >
           <template v-slot:cell(price)="row">
-            $ {{ row.value.toFixed(2) }}
+            {{ formatAsPrice(row.value) }}
+          </template>
+
+          <template v-slot:cell(createdAt)="row">
+            {{ formatAsTime(row.value) }}
           </template>
 
           <template v-slot:cell(actions)="row">
@@ -88,26 +97,27 @@
 </template>
 
 <script>
-import moment from 'moment'
 import Navbar from '~/components/Navbar.vue'
 import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
 import SortControl from '~/components/SortControl.vue'
 import FilterControl from '~/components/FilterControl.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
-import EditModal from '~/components/EditModal.vue'
+import EditTransactionModal from '~/components/EditTransactionModal.vue'
 import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
 import TransactionInfoModal from '~/components/TransactionInfoModal.vue'
 import REMOVE_TRANSACTION from '~/graphql/sale/REMOVE_TRANSACTION.gql'
+import Formatting from '~/assets/formatting.js'
+import CSV from '~/assets/csv.js'
 
 export default {
   components: {
-    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal, TransactionInfoModal
+    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditTransactionModal, TransactionInfoModal
   },
   data () {
     return {
       transactionsRawData: [],
       fields: [
-        { key: 'time', label: 'Time of Sale', sortable: true },
+        { key: 'createdAt', label: 'Time of Sale', sortable: true },
         { key: 'NoItems', label: 'No of Items', sortable: true, sortDirection: 'desc', class: 'text-center' },
         { key: 'price', label: 'Cost of Sale', sortable: true, sortDirection: 'desc', class: 'text-center' },
         { key: 'itemsSold', label: 'Items Sold', class: 'text-left' },
@@ -162,8 +172,15 @@ export default {
           }
         }
 
-        // Time of sale
-        const time = moment(Number(t.createdAt)).format('h:mm:ss a, DD/MM/YYYY')
+        // Nice List of items
+        const productsNice = []
+        if (t.products != null) {
+          const productsNoDuplicates = Array.from(new Set(t.products))
+          for (const product of productsNoDuplicates) {
+            const qty = t.products.filter(p => p.id === product.id).length
+            productsNice.push({ product, qty })
+          }
+        }
 
         // Items sold
         let itemsSold = ''
@@ -187,8 +204,9 @@ export default {
           }
           itemsSoldLong = itemsSoldLong.slice(0, -2)
         }
+        // const itemsSoldLong =
 
-        return { NoItems, price, time, itemsSold, itemsSoldLong, ...t }
+        return { NoItems, price, itemsSold, itemsSoldLong, productsNice, ...t }
       })
     }
   },
@@ -196,9 +214,10 @@ export default {
     setTimeout(async () => { await this.fetchTransactions() }, 200)
   },
   methods: {
+    ...Formatting,
+    ...CSV,
     editInfo (item, index) {
-      const niceitem = { TransactionNo: item.TransactionNo, price: item.price.cost, NoItems: item.NoItems, time: item.time }
-      this.editModal = { item: niceitem, index }
+      this.editModal = { item, index }
       this.$bvModal.show('edit-modal')
     },
     showInfo (item, index) {
@@ -220,7 +239,7 @@ export default {
       })
     },
     commitEdit (newItem, index) {
-      this.transactions[index] = { TransactionNo: newItem.TransactionNo, price: { cost: newItem.price }, NoItems: newItem.NoItems, time: newItem.time }
+      this.transactions[index] = { TransactionNo: newItem.TransactionNo, price: { cost: newItem.price }, NoItems: newItem.NoItems }
       // TODO - update to server
     },
     filterByDate (option) {
@@ -247,24 +266,9 @@ export default {
           query: FETCH_TRANSACTIONS
         })
         .then(({ data }) => {
-          console.log(data)
           this.transactionsRawData = data.transactions
         })
     }
-
   }
 }
 </script>
-
-<style lang="scss">
-.container {
-  min-height: 100vh;
-}
-.table {
-    border-collapse: collapse;
-    border: 1px solid #ddd;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-}
-</style>

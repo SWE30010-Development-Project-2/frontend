@@ -1,24 +1,10 @@
 <template>
-  <b-modal :id="id" title="Edit Transaction Items">
-    <b-form>
-      <b-form-group
-        v-for="(property, propertyName) in item"
-        :id="'fieldset-' + propertyName"
-        :key="propertyName"
-        label-cols="4"
-        :label="itemPropertyLabels[propertyName] + ': '"
-        :label-for="propertyName"
-      >
-        <b-form-input
-          :id="propertyName"
-          v-model="item[propertyName]"
-          type="text"
-          :placeholder="itemPropertyLabels[propertyName]"
-        />
-      </b-form-group>
-    </b-form>
+  <b-modal :id="id" title="Edit Transaction">
+    <b-list-group>
+      <searched-item v-for="(product, index) in transaction.products" :key="index" :name="product.name" @deleteItem="transaction.products = transaction.products.filter(p => p.id !== product.id)" />
+    </b-list-group>
     <div slot="modal-footer">
-      <b-button variant="primary" @click="$bvModal.hide(id); $emit('commitEdit', item)">
+      <b-button variant="primary" @click="$bvModal.hide(id); $emit('commitEdit', transaction)">
         Edit
       </b-button>
       <b-button variant="outline-dark" @click="$bvModal.hide(id)">
@@ -29,26 +15,20 @@
 </template>
 
 <script>
+import SearchedItem from '~/components/SearchedItem.vue'
 export default {
+  components: {
+    SearchedItem
+  },
   props: {
     id: {
       type: String,
-      default: 'confirm-edit',
-      required: true
+      default: 'edit-modal',
+      required: false
     },
-    item: {
+    transaction: {
       type: Object,
       default: () => null,
-      required: true
-    },
-    itemPropertyLabels: {
-      type: Object,
-      default: () => null,
-      required: true
-    },
-    index: {
-      type: Number,
-      default: -1,
       required: true
     }
   }

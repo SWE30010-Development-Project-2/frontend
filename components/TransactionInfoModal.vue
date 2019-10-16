@@ -1,16 +1,16 @@
 <template>
   <b-modal v-if="transaction" :id="id" title="Transaction Information">
     <p>
-      <strong>Time of Sale: </strong>{{ transaction.time }}
+      <strong>Time of Sale: </strong>{{ formatAsTime(transaction.createdAt) }}
     </p>
     <p>
       <strong>Number of Items: </strong>{{ transaction.NoItems }}
     </p>
     <p v-if="transaction.price">
-      <strong>Cost of sale: </strong>$ {{ transaction.price.toFixed(2) }}
+      <strong>Cost of sale: </strong>{{ formatAsPrice(transaction.price) }}
     </p>
     <p>
-      <strong>Items Sold: </strong>{{ transaction.itemsSoldLong }}
+      <strong>Items Sold: </strong>{{ formatListAllProducts(transaction.productsNice) }}
     </p>
     <div slot="modal-footer">
       <b-button variant="primary" @click="$bvModal.hide(id)">
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import Formatting from '~/assets/formatting.js'
+
 export default {
   props: {
     id: {
@@ -33,6 +35,9 @@ export default {
       default: () => null,
       required: true
     }
+  },
+  methods: {
+    ...Formatting
   }
 }
 </script>

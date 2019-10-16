@@ -19,3 +19,10 @@ $font-family-sans-serif:    "Noto Sans", sans-serif, Arial, "Noto Color Emoji";
 .display-1, .display-2, .display-3, .display-4 {
   font-family: 'Quicksand', 'Segoe UI';
 }
+.table {
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
