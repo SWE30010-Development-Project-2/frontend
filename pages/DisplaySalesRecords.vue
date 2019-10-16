@@ -20,12 +20,7 @@
     />
 
     <!-- Info Modal -->
-    <info-modal
-      id="info-modal"
-      :item="infoModal.item"
-      :index="infoModal.index"
-      :item-property-labels="{ time: 'Time of Sale', NoItems: 'No of Items', price: 'Cost of Sale', itemsSoldLong: 'Items Sold' }"
-    />
+    <transaction-info-modal id="info-modal" :transaction="infoModal.item" />
 
     <!-- Page -->
     <navbar title="Display Sales Record" />
@@ -101,12 +96,12 @@ import FilterControl from '~/components/FilterControl.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import EditModal from '~/components/EditModal.vue'
 import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
-import InfoModal from '~/components/InfoModal.vue'
+import TransactionInfoModal from '~/components/TransactionInfoModal.vue'
 import REMOVE_TRANSACTION from '~/graphql/sale/REMOVE_TRANSACTION.gql'
 
 export default {
   components: {
-    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal, InfoModal
+    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal, TransactionInfoModal
   },
   data () {
     return {
@@ -214,10 +209,6 @@ export default {
       this.confirmDeleteModal = { item, index }
       this.$bvModal.show('confirm-delete-modal')
     },
-    // deleteRow (index) {
-    //   this.transactions.splice(index, 1)
-    //   // TODO - send delete to server
-    // },
     async deleteRow (id) {
       // Remove locally
       this.transactionsRawData = this.transactionsRawData.filter(transaction => transaction.id !== id)

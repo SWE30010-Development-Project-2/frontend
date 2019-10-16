@@ -12,6 +12,7 @@
         <b-form-input
           :id="propertyName"
           v-model="item[propertyName]"
+          type="text"
           :placeholder="itemPropertyLabels[propertyName]"
         />
       </b-form-group>
