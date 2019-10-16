@@ -6,7 +6,7 @@
       id="confirm-delete-modal"
       :item="confirmDeleteModal.item"
       :index="confirmDeleteModal.index"
-      :item-property-labels="{ time: 'Time of Sale', NoItems: 'No of Items', price: 'Cost of Sale', itemsSoldLong: 'Items Sold' }"
+      :item-property-labels="{ time: 'Time of Sale', itemsSoldLong: 'Items Sold' }"
       @confirm-deletion="deleteRow(confirmDeleteModal.item.id)"
     />
 
