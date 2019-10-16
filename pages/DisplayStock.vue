@@ -22,10 +22,14 @@
 
     <!-- Page -->
     <navbar title="Display Stock" />
-    <time-selection-buttons @today="filterByDate('today')" @week="filterByDate('week')" @month="filterByDate('month')" @year="filterByDate('year')" />
 
     <b-container fluid>
       <!-- User Interface controls -->
+      <b-row class="mt-3 mb-3">
+        <b-col>
+          <time-selection-buttons @today="filterByDate('today')" @week="filterByDate('week')" @month="filterByDate('month')" @year="filterByDate('year')" />
+        </b-col>
+      </b-row>
       <b-row>
         <b-col lg="6" class="my-1">
           <sort-control :sort-value="{sortBy, sortDesc}" :sort-options="sortOptions" @input="sortBy = $event.sortBy; sortDesc=$event.sortDesc" />
@@ -53,7 +57,7 @@
         @filtered="onFiltered"
       >
         <template v-slot:cell(price)="row">
-          $ {{ row.value.toFixed(2) }}
+          {{ formatAsPrice(row.value) }}
         </template>
 
         <template v-slot:cell(actions)="row">
@@ -93,6 +97,7 @@ import ProductInfoModal from '~/components/ProductInfoModal.vue'
 import FETCHPRODUCTS from '~/graphql/product/FETCHPRODUCTS.gql'
 import REMOVE_PRODUCT from '~/graphql/product/REMOVE_PRODUCT.gql'
 import UPDATE_PRODUCT from '~/graphql/product/UPDATE_PRODUCT.gql'
+import Formatting from '~/assets/formatting.js'
 
 export default {
   components: {
@@ -143,6 +148,7 @@ export default {
     setTimeout(async () => { await this.fetchProducts() }, 200)
   },
   methods: {
+    ...Formatting,
     confirmDeleteRow (item, index) {
       this.confirmDeleteModal = { item, index }
       this.$bvModal.show('confirm-delete-modal')
@@ -219,16 +225,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.container {
-  min-height: 100vh;
-}
-.table {
-    border-collapse: collapse;
-  border: 1px solid #ddd;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-}
-</style>

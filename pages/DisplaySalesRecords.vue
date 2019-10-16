@@ -4,7 +4,7 @@
     <!-- Confirm Delete Modal -->
     <confirm-delete-modal
       id="confirm-delete-modal"
-      :item="confirmDeleteModal.item"
+      :item="{ time: formatAsTime(confirmDeleteModal.item.createdAt), itemsSoldLong: confirmDeleteModal.item.itemsSoldLong }"
       :index="confirmDeleteModal.index"
       :item-property-labels="{ time: 'Time of Sale', itemsSoldLong: 'Items Sold' }"
       @confirm-deletion="deleteRow(confirmDeleteModal.item.id)"
@@ -27,13 +27,12 @@
 
     <b-container fluid>
       <!-- User Interface controls -->
-
       <b-row class="mt-3 mb-3">
         <b-col>
           <time-selection-buttons @today="filterByDate('today')" @week="filterByDate('week')" @month="filterByDate('month')" @year="filterByDate('year')" />
         </b-col>
         <b-col cols="auto">
-          <b-button variant="warning" @click="exportToCSV">
+          <b-button variant="warning" @click="exportToCSV(transactions)">
             Export to CSV
           </b-button>
         </b-col>
@@ -64,11 +63,11 @@
           :sort-direction="sortDirection"
         >
           <template v-slot:cell(price)="row">
-            $ {{ row.value.toFixed(2) }}
+            {{ formatAsPrice(row.value) }}
           </template>
 
           <template v-slot:cell(createdAt)="row">
-            {{ formatTime(row.value) }}
+            {{ formatAsTime(row.value) }}
           </template>
 
           <template v-slot:cell(actions)="row">
@@ -101,9 +100,6 @@
 </template>
 
 <script>
-import moment from 'moment'
-import jsoncsv from 'json-csv'
-import FileSaver from 'file-saver'
 import Navbar from '~/components/Navbar.vue'
 import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
 import SortControl from '~/components/SortControl.vue'
@@ -113,6 +109,8 @@ import EditModal from '~/components/EditModal.vue'
 import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
 import TransactionInfoModal from '~/components/TransactionInfoModal.vue'
 import REMOVE_TRANSACTION from '~/graphql/sale/REMOVE_TRANSACTION.gql'
+import Formatting from '~/assets/formatting.js'
+import CSV from '~/assets/csv.js'
 
 export default {
   components: {
@@ -177,9 +175,6 @@ export default {
           }
         }
 
-        // Time of sale
-        const time = moment(Number(t.createdAt)).format('h:mm:ss a, DD/MM/YYYY')
-
         // Items sold
         let itemsSold = ''
         const maxLength = 3
@@ -203,7 +198,7 @@ export default {
           itemsSoldLong = itemsSoldLong.slice(0, -2)
         }
 
-        return { NoItems, price, time, itemsSold, itemsSoldLong, ...t }
+        return { NoItems, price, itemsSold, itemsSoldLong, ...t }
       })
     }
   },
@@ -211,11 +206,10 @@ export default {
     setTimeout(async () => { await this.fetchTransactions() }, 200)
   },
   methods: {
-    formatTime (time) {
-      return moment(Number(time)).format('h:mm:ss a - DD/MM/YYYY')
-    },
+    ...Formatting,
+    ...CSV,
     editInfo (item, index) {
-      const niceitem = { TransactionNo: item.TransactionNo, price: item.price.cost, NoItems: item.NoItems, time: item.time }
+      const niceitem = { TransactionNo: item.TransactionNo, price: item.price.cost, NoItems: item.NoItems }
       this.editModal = { item: niceitem, index }
       this.$bvModal.show('edit-modal')
     },
@@ -238,7 +232,7 @@ export default {
       })
     },
     commitEdit (newItem, index) {
-      this.transactions[index] = { TransactionNo: newItem.TransactionNo, price: { cost: newItem.price }, NoItems: newItem.NoItems, time: newItem.time }
+      this.transactions[index] = { TransactionNo: newItem.TransactionNo, price: { cost: newItem.price }, NoItems: newItem.NoItems }
       // TODO - update to server
     },
     filterByDate (option) {
@@ -267,62 +261,7 @@ export default {
         .then(({ data }) => {
           this.transactionsRawData = data.transactions
         })
-    },
-    exportToCSV () {
-      const data = this.transactions.map(t => ({ id: t.id, noItems: t.NoItems, itemsSold: t.itemsSoldLong, price: t.price, time: t.time }))
-      const options = {
-        fields: [
-          {
-            name: 'id',
-            label: 'Transaction ID',
-            quoted: true
-          },
-          {
-            name: 'noItems',
-            label: 'Number of Items',
-            quoted: true
-          },
-          {
-            name: 'itemsSold',
-            label: 'Items Sold',
-            quoted: true
-          },
-          {
-            name: 'price',
-            label: 'Price of Transaction',
-            quoted: true
-          },
-          {
-            name: 'time',
-            label: 'Time of transaction',
-            quoted: true
-          }
-        ]
-      }
-
-      jsoncsv.csvBuffered(data, options, (err, csv) => {
-        if (!err) {
-          const blob = new Blob([csv], { type: 'text/plain;charset=utf-8' })
-          FileSaver.saveAs(blob, 'transactions.csv')
-        } else {
-          console.log(err)
-        }
-      })
     }
-
   }
 }
 </script>
-
-<style lang="scss">
-.container {
-  min-height: 100vh;
-}
-.table {
-    border-collapse: collapse;
-    border: 1px solid #ddd;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-}
-</style>

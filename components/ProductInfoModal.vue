@@ -7,7 +7,7 @@
       <strong>Description: </strong>{{ product.description }}
     </p>
     <p v-if="product.price">
-      <strong>Price: </strong>$ {{ product.price.toFixed(2) }}
+      <strong>Price: </strong>{{ formatAsPrice(product.price) }}
     </p>
     <p>
       <strong>Barcode: </strong>{{ product.barcode }}
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import Formatting from '~/assets/formatting.js'
+
 export default {
   props: {
     id: {
@@ -33,6 +35,9 @@ export default {
       default: () => null,
       required: true
     }
+  },
+  methods: {
+    ...Formatting
   }
 }
 </script>
