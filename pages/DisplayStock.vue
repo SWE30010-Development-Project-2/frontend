@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Navbar from '~/components/Navbar.vue'
 import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
 import SortControl from '~/components/SortControl.vue'
@@ -142,10 +143,16 @@ export default {
         .map((f) => {
           return { text: f.label, value: f.key }
         })
-    }
+    },
+    ...mapGetters({
+      user: 'auth/user'
+    })
   },
   mounted () {
     setTimeout(async () => { await this.fetchProducts() }, 200)
+    if (this.user === null) {
+      this.$router.push('/login')
+    }
   },
   methods: {
     ...Formatting,

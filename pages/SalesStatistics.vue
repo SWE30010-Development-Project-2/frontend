@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Navbar from '~/components/Navbar.vue'
 import RequestSalesStatsForm from '~/components/RequestSalesStatsForm.vue'
 import LoadingReport from '~/components/LoadingReport.vue'
@@ -31,10 +32,23 @@ export default {
       state: 'form'
     }
   },
+  computed: {
+    ...mapGetters({
+      user: 'auth/user'
+    })
+  },
+  mounted () {
+    setTimeout(async () => { await this.fetchProducts() }, 200)
+    if (this.user === null) {
+      this.$router.push('/login')
+    }
+  },
+
   methods: {
     sleep (time) {
       return new Promise(resolve => setTimeout(resolve, time))
     }
+
   }
 }
 </script>

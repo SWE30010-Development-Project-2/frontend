@@ -93,9 +93,9 @@ export default {
   mounted () {
     setTimeout(async () => { await this.fetchProducts() }, 200)
 
-    // if (this.user == null) {
-    //   this.$router.push('/login')
-    // }
+    if (this.user === null) {
+      this.$router.push('/login')
+    }
   },
   methods: {
     addItem (name, id) {

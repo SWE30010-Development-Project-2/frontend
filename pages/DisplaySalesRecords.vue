@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Navbar from '~/components/Navbar.vue'
 import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
 import SortControl from '~/components/SortControl.vue'
@@ -208,10 +209,17 @@ export default {
 
         return { NoItems, price, itemsSold, itemsSoldLong, productsNice, ...t }
       })
-    }
+    },
+    ...mapGetters({
+      user: 'auth/user'
+    })
   },
   mounted () {
     setTimeout(async () => { await this.fetchTransactions() }, 200)
+
+    if (this.user === null) {
+      this.$router.push('/login')
+    }
   },
   methods: {
     ...Formatting,
