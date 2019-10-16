@@ -25,10 +25,19 @@
     <!-- Page -->
     <navbar title="Display Sales Record" />
 
-    <time-selection-buttons @today="filterByDate('today')" @week="filterByDate('week')" @month="filterByDate('month')" @year="filterByDate('year')" />
-
     <b-container fluid>
       <!-- User Interface controls -->
+
+      <b-row class="mt-3 mb-3">
+        <b-col>
+          <time-selection-buttons @today="filterByDate('today')" @week="filterByDate('week')" @month="filterByDate('month')" @year="filterByDate('year')" />
+        </b-col>
+        <b-col cols="auto">
+          <b-button variant="warning" @click="exportToCSV">
+            Export to CSV
+          </b-button>
+        </b-col>
+      </b-row>
       <b-row>
         <b-col lg="6" class="my-1">
           <sort-control :sort-value="{sortBy, sortDesc}" :sort-options="sortOptions" @input="sortBy = $event.sortBy; sortDesc=$event.sortDesc" />
@@ -89,6 +98,8 @@
 
 <script>
 import moment from 'moment'
+import jsoncsv from 'json-csv'
+import FileSaver from 'file-saver'
 import Navbar from '~/components/Navbar.vue'
 import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
 import SortControl from '~/components/SortControl.vue'
@@ -247,9 +258,49 @@ export default {
           query: FETCH_TRANSACTIONS
         })
         .then(({ data }) => {
-          console.log(data)
           this.transactionsRawData = data.transactions
         })
+    },
+    exportToCSV () {
+      const data = this.transactions.map(t => ({ id: t.id, noItems: t.NoItems, itemsSold: t.itemsSoldLong, price: t.price, time: t.time }))
+      const options = {
+        fields: [
+          {
+            name: 'id',
+            label: 'Transaction ID',
+            quoted: true
+          },
+          {
+            name: 'noItems',
+            label: 'Number of Items',
+            quoted: true
+          },
+          {
+            name: 'itemsSold',
+            label: 'Items Sold',
+            quoted: true
+          },
+          {
+            name: 'price',
+            label: 'Price of Transaction',
+            quoted: true
+          },
+          {
+            name: 'time',
+            label: 'Time of transaction',
+            quoted: true
+          }
+        ]
+      }
+
+      jsoncsv.csvBuffered(data, options, (err, csv) => {
+        if (!err) {
+          const blob = new Blob([csv], { type: 'text/plain;charset=utf-8' })
+          FileSaver.saveAs(blob, 'transactions.csv')
+        } else {
+          console.log(err)
+        }
+      })
     }
 
   }
