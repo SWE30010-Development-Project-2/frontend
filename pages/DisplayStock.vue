@@ -18,12 +18,8 @@
       @commitEdit="commitEdit(editModal.item.id, $event)"
     />
     <!-- Info Modal -->
-    <info-modal
-      id="info-modal"
-      :item="infoModal.item"
-      :index="infoModal.index"
-      :item-property-labels="{ name: 'Product Name', description: 'Description', price: 'Price', barcode: 'Barcode' }"
-    />
+    <product-info-modal :product="infoModal.item" />
+
     <!-- Page -->
     <navbar title="Display Stock" />
     <time-selection-buttons @today="filterByDate('today')" @week="filterByDate('week')" @month="filterByDate('month')" @year="filterByDate('year')" />
@@ -93,14 +89,14 @@ import SortControl from '~/components/SortControl.vue'
 import FilterControl from '~/components/FilterControl.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import EditModal from '~/components/EditModal.vue'
-import InfoModal from '~/components/InfoModal.vue'
+import ProductInfoModal from '~/components/ProductInfoModal.vue'
 import FETCHPRODUCTS from '~/graphql/product/FETCHPRODUCTS.gql'
 import REMOVE_PRODUCT from '~/graphql/product/REMOVE_PRODUCT.gql'
 import UPDATE_PRODUCT from '~/graphql/product/UPDATE_PRODUCT.gql'
 
 export default {
   components: {
-    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal, InfoModal
+    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal, ProductInfoModal
   },
   data () {
     return {

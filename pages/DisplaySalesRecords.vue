@@ -20,7 +20,7 @@
     />
 
     <!-- Info Modal -->
-    <transaction-info-modal id="info-modal" :transaction="infoModal.item" />
+    <transaction-info-modal :transaction="infoModal.item" />
 
     <!-- Page -->
     <navbar title="Display Sales Record" />
