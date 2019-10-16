@@ -1,5 +1,5 @@
 <template>
-  <b-modal :id="id" title="Edit Product">
+  <b-modal :id="id" title="Edit Transaction Items">
     <b-form>
       <b-form-group
         v-for="(property, propertyName) in item"
@@ -10,14 +10,6 @@
         :label-for="propertyName"
       >
         <b-form-input
-          v-if="typeof item[propertyName] === 'number'"
-          :id="propertyName"
-          v-model="item[propertyName]"
-          type="number"
-          :placeholder="itemPropertyLabels[propertyName]"
-        />
-        <b-form-input
-          v-else
           :id="propertyName"
           v-model="item[propertyName]"
           type="text"

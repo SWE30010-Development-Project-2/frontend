@@ -160,6 +160,7 @@ export default {
     async commitEdit (id, newProduct) {
       // Update locally
       this.products = this.products.filter(product => product.id !== id)
+      newProduct.price = Number(newProduct.price)
       this.products.push({ id, ...newProduct })
 
       // Update to server
