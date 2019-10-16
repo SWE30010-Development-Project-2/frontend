@@ -67,6 +67,10 @@
             $ {{ row.value.toFixed(2) }}
           </template>
 
+          <template v-slot:cell(createdAt)="row">
+            {{ formatTime(row.value) }}
+          </template>
+
           <template v-slot:cell(actions)="row">
             <b-button variant="info" size="sm" class="mr-1" @click="showInfo(row.item, row.index)">
               Info
@@ -118,7 +122,7 @@ export default {
     return {
       transactionsRawData: [],
       fields: [
-        { key: 'time', label: 'Time of Sale', sortable: true },
+        { key: 'createdAt', label: 'Time of Sale', sortable: true },
         { key: 'NoItems', label: 'No of Items', sortable: true, sortDirection: 'desc', class: 'text-center' },
         { key: 'price', label: 'Cost of Sale', sortable: true, sortDirection: 'desc', class: 'text-center' },
         { key: 'itemsSold', label: 'Items Sold', class: 'text-left' },
@@ -207,6 +211,9 @@ export default {
     setTimeout(async () => { await this.fetchTransactions() }, 200)
   },
   methods: {
+    formatTime (time) {
+      return moment(Number(time)).format('h:mm:ss a - DD/MM/YYYY')
+    },
     editInfo (item, index) {
       const niceitem = { TransactionNo: item.TransactionNo, price: item.price.cost, NoItems: item.NoItems, time: item.time }
       this.editModal = { item: niceitem, index }
