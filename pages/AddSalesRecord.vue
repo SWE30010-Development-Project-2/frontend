@@ -103,7 +103,7 @@ export default {
       }
     },
     async recordSale () {
-      const ids = this.items.map(item => item.id)
+      const ids = this.items.flatMap(item => Array(item.qty).fill(item.id))
 
       // Send to server
       await this.$apollo.mutate({

@@ -10,7 +10,7 @@
       <strong>Cost of sale: </strong>{{ formatAsPrice(transaction.price) }}
     </p>
     <p>
-      <strong>Items Sold: </strong>{{ transaction.itemsSoldLong }}
+      <strong>Items Sold: </strong>{{ formatListAllProducts(transaction.productsNice) }}
     </p>
     <div slot="modal-footer">
       <b-button variant="primary" @click="$bvModal.hide(id)">

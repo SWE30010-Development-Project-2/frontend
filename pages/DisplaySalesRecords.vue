@@ -172,6 +172,16 @@ export default {
           }
         }
 
+        // Nice List of items
+        const productsNice = []
+        if (t.products != null) {
+          const productsNoDuplicates = Array.from(new Set(t.products))
+          for (const product of productsNoDuplicates) {
+            const qty = t.products.filter(p => p.id === product.id).length
+            productsNice.push({ product, qty })
+          }
+        }
+
         // Items sold
         let itemsSold = ''
         const maxLength = 3
@@ -194,8 +204,9 @@ export default {
           }
           itemsSoldLong = itemsSoldLong.slice(0, -2)
         }
+        // const itemsSoldLong =
 
-        return { NoItems, price, itemsSold, itemsSoldLong, ...t }
+        return { NoItems, price, itemsSold, itemsSoldLong, productsNice, ...t }
       })
     }
   },
