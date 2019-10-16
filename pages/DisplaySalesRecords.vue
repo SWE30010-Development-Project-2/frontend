@@ -11,11 +11,8 @@
     />
 
     <!-- Edit Modal -->
-    <edit-modal
-      id="edit-modal"
-      :item="editModal.item"
-      :index="editModal.index"
-      :item-property-labels="{ }"
+    <edit-transaction-modal
+      :transaction="editModal.item"
       @commitEdit="commitEdit($event,editModal.index)"
     />
 
@@ -105,7 +102,7 @@ import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
 import SortControl from '~/components/SortControl.vue'
 import FilterControl from '~/components/FilterControl.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
-import EditModal from '~/components/EditModal.vue'
+import EditTransactionModal from '~/components/EditTransactionModal.vue'
 import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
 import TransactionInfoModal from '~/components/TransactionInfoModal.vue'
 import REMOVE_TRANSACTION from '~/graphql/sale/REMOVE_TRANSACTION.gql'
@@ -114,7 +111,7 @@ import CSV from '~/assets/csv.js'
 
 export default {
   components: {
-    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditModal, TransactionInfoModal
+    Navbar, TimeSelectionButtons, SortControl, FilterControl, ConfirmDeleteModal, EditTransactionModal, TransactionInfoModal
   },
   data () {
     return {
@@ -209,8 +206,7 @@ export default {
     ...Formatting,
     ...CSV,
     editInfo (item, index) {
-      const niceitem = { TransactionNo: item.TransactionNo, price: item.price.cost, NoItems: item.NoItems }
-      this.editModal = { item: niceitem, index }
+      this.editModal = { item, index }
       this.$bvModal.show('edit-modal')
     },
     showInfo (item, index) {
