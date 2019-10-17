@@ -4,9 +4,9 @@
     <!-- Confirm Delete Modal -->
     <confirm-delete-modal
       id="confirm-delete-modal"
-      :item="{ time: formatAsTime(confirmDeleteModal.item.createdAt), itemsSoldLong: confirmDeleteModal.item.itemsSoldLong }"
+      :item="{ time: formatAsTime(confirmDeleteModal.item.createdAt), itemsSold: formatListAllProducts(confirmDeleteModal.item.productsNice) }"
       :index="confirmDeleteModal.index"
-      :item-property-labels="{ time: 'Time of Sale', itemsSoldLong: 'Items Sold' }"
+      :item-property-labels="{ time: 'Time of Sale', itemsSold: 'Items Sold' }"
       @confirm-deletion="deleteRow(confirmDeleteModal.item.id)"
     />
 
@@ -67,6 +67,10 @@
             {{ formatAsTime(row.value) }}
           </template>
 
+          <template v-slot:cell(productsNice)="row">
+            {{ formatListProductsShort(row.value) }}
+          </template>
+
           <template v-slot:cell(actions)="row">
             <b-button variant="info" size="sm" class="mr-1" @click="showInfo(row.item, row.index)">
               Info
@@ -121,7 +125,7 @@ export default {
         { key: 'createdAt', label: 'Time of Sale', sortable: true },
         { key: 'NoItems', label: 'No of Items', sortable: true, sortDirection: 'desc', class: 'text-center' },
         { key: 'price', label: 'Cost of Sale', sortable: true, sortDirection: 'desc', class: 'text-center' },
-        { key: 'itemsSold', label: 'Items Sold', class: 'text-left' },
+        { key: 'productsNice', label: 'Items Sold', class: 'text-left' },
         { key: 'actions', label: 'Actions' }
       ],
       totalRows: 1,
@@ -183,31 +187,7 @@ export default {
           }
         }
 
-        // Items sold
-        let itemsSold = ''
-        const maxLength = 3
-        if (t.products != null) {
-          for (const p of t.products.slice(0, maxLength)) {
-            itemsSold += p.name + ', '
-          }
-          if (t.products.length > maxLength) {
-            itemsSold = itemsSold.slice(0, -2) + ' and ' + String(t.products.length - maxLength) + ' other items'
-          } else {
-            itemsSold = itemsSold.slice(0, -2)
-          }
-        }
-
-        // All items sold
-        let itemsSoldLong = ''
-        if (t.products != null) {
-          for (const p of t.products) {
-            itemsSoldLong += p.name + ', '
-          }
-          itemsSoldLong = itemsSoldLong.slice(0, -2)
-        }
-        // const itemsSoldLong =
-
-        return { NoItems, price, itemsSold, itemsSoldLong, productsNice, ...t }
+        return { NoItems, price, productsNice, ...t }
       })
     },
     ...mapGetters({

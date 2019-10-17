@@ -3,7 +3,7 @@ import FileSaver from 'file-saver'
 
 export default {
   exportToCSV (transactions) {
-    const data = transactions.map(t => ({ id: t.id, noItems: t.NoItems, itemsSold: t.itemsSoldLong, price: t.price, time: this.formatAsTime(t.createdAt) }))
+    const data = transactions.map(t => ({ id: t.id, noItems: t.NoItems, itemsSold: this.formatListAllProducts(t.productsNice), price: this.formatAsPrice(t.price), time: this.formatAsTime(t.createdAt) }))
     const options = {
       fields: [
         {
