@@ -51,7 +51,6 @@
           :fields="fields"
           :filter="filter"
           :filter-included-fields="filterOn"
-          :today="today"
           :sort-by.sync="sortBy"
           :sort-desc.sync="sortDesc"
           :sort-direction="sortDirection"
@@ -125,7 +124,6 @@ export default {
         { key: 'productsNice', label: 'Items Sold', class: 'text-left' },
         { key: 'actions', label: 'Actions' }
       ],
-      // totalRows: 1,
       sortBy: '',
       sortDesc: false,
       sortDirection: 'asc',
