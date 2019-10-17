@@ -124,12 +124,10 @@ export default {
         { key: 'productsNice', label: 'Items Sold', class: 'text-left' },
         { key: 'actions', label: 'Actions' }
       ],
-      sortBy: '',
+      sortBy: 'createdAt',
       sortDesc: false,
-      sortDirection: 'asc',
       filter: null,
       filterOn: [],
-      today: '',
       editModalData: {},
       deleteModalData: {},
       infoModalData: {}
