@@ -12,7 +12,7 @@
     <!-- Edit Modal -->
     <edit-transaction-modal
       :transaction="editModalData"
-      @commitEdit="commitEdit($event, $event.id)"
+      @commitEdit="updateTransaction($event, $event.id)"
     />
 
     <!-- Info Modal -->
@@ -104,8 +104,9 @@ import SortControl from '~/components/SortControl.vue'
 import FilterControl from '~/components/FilterControl.vue'
 import ConfirmDeleteModal from '~/components/ConfirmDeleteModal.vue'
 import EditTransactionModal from '~/components/EditTransactionModal.vue'
-import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
 import TransactionInfoModal from '~/components/TransactionInfoModal.vue'
+import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
+import UPDATE_TRANSACTION from '~/graphql/sale/UPDATE_TRANSACTION.gql'
 import REMOVE_TRANSACTION from '~/graphql/sale/REMOVE_TRANSACTION.gql'
 import Formatting from '~/assets/formatting.js'
 import CSV from '~/assets/csv.js'
@@ -207,12 +208,20 @@ export default {
         variables: { id }
       })
     },
-    commitEdit (newItem, id) {
+    async updateTransaction (newItem, id) {
       // Update locally
       this.transactionsRawData = this.transactionsRawData.filter(transaction => transaction.id !== id)
       this.transactionsRawData.push(newItem)
 
-      // TODO - update to server
+      // Update to server
+      await this.$apollo.mutate({
+        mutation: UPDATE_TRANSACTION,
+        variables: {
+          id,
+          employee: this.user.id,
+          products: newItem.products.map(product => product.id)
+        }
+      })
     },
     filterByDate (option) {
       // Get Date

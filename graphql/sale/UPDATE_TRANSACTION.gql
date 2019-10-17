@@ -1,0 +1,12 @@
+mutation UpdateTransaction ($id: String!, $employee: ID!, $products: [ID!]!) {
+    updateTransaction(id: $id, employee: $employee, products: $products)
+    {
+        id,
+        employee {
+            id
+        },
+        products {
+            id
+        }
+    }
+}
