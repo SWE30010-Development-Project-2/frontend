@@ -10,5 +10,9 @@ query FetchTransactions {
         }
         createdAt
         updatedAt
+        employee {
+            id
+            username
+        }
     }
 }

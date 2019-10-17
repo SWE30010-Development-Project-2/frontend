@@ -12,6 +12,9 @@
     <p>
       <strong>Items Sold: </strong>{{ formatListAllProducts(transaction.productsNice) }}
     </p>
+    <p v-if="transaction.employee">
+      <strong>Employee Id: </strong>{{ transaction.employee.username }}
+    </p>
     <div slot="modal-footer">
       <b-button variant="primary" @click="$bvModal.hide(id)">
         Done
