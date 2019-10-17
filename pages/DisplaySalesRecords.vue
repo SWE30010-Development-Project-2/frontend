@@ -4,20 +4,19 @@
     <!-- Confirm Delete Modal -->
     <confirm-delete-modal
       id="confirm-delete-modal"
-      :item="{ time: formatAsTime(confirmDeleteModal.item.createdAt), itemsSold: formatListAllProducts(confirmDeleteModal.item.productsNice) }"
-      :index="confirmDeleteModal.index"
+      :item="{ time: formatAsTime(deleteModalData.createdAt), itemsSold: formatListAllProducts(deleteModalData.productsNice) }"
       :item-property-labels="{ time: 'Time of Sale', itemsSold: 'Items Sold' }"
-      @confirm-deletion="deleteRow(confirmDeleteModal.item.id)"
+      @confirm-deletion="deleteTransaction(deleteModalData.id)"
     />
 
     <!-- Edit Modal -->
     <edit-transaction-modal
-      :transaction="editModal.item"
-      @commitEdit="commitEdit($event,editModal.index)"
+      :transaction="editModalData"
+      @commitEdit="commitEdit($event, $event.id)"
     />
 
     <!-- Info Modal -->
-    <transaction-info-modal :transaction="infoModal.item" />
+    <transaction-info-modal :transaction="infoModalData" />
 
     <!-- Page -->
     <navbar title="Display Sales Record" />
@@ -50,8 +49,6 @@
           stacked="md"
           :items="transactions"
           :fields="fields"
-          :current-psales="currentPsales"
-          :per-psales="perPsales"
           :filter="filter"
           :filter-included-fields="filterOn"
           :today="today"
@@ -72,13 +69,13 @@
           </template>
 
           <template v-slot:cell(actions)="row">
-            <b-button variant="info" size="sm" class="mr-1" @click="showInfo(row.item, row.index)">
+            <b-button variant="info" size="sm" class="mr-1" @click="displayInfoModal(row.item)">
               Info
             </b-button>
-            <b-button variant="primary" size="sm" @click="editInfo(row.item, row.index)">
+            <b-button variant="primary" size="sm" @click="displayEditModal(row.item)">
               Edit
             </b-button>
-            <b-button variant="danger" size="sm" @click="confirmDeleteRow(row.item, row.index)">
+            <b-button variant="danger" size="sm" @click="displayDeleteModal(row.item)">
               Delete
             </b-button>
           </template>
@@ -128,28 +125,16 @@ export default {
         { key: 'productsNice', label: 'Items Sold', class: 'text-left' },
         { key: 'actions', label: 'Actions' }
       ],
-      totalRows: 1,
-      currentPprice: 1,
-      perPprice: 5,
-      ppriceOptions: [5, 10, 15],
+      // totalRows: 1,
       sortBy: '',
       sortDesc: false,
       sortDirection: 'asc',
       filter: null,
       filterOn: [],
       today: '',
-      editModal: {
-        index: null,
-        item: { TransactionNo: -1, price: -1, NoItems: -1, time: '' }
-      },
-      confirmDeleteModal: {
-        index: null,
-        item: { }
-      },
-      infoModal: {
-        index: null,
-        item: { }
-      }
+      editModalData: {},
+      deleteModalData: {},
+      infoModalData: {}
     }
   },
   computed: {
@@ -204,19 +189,19 @@ export default {
   methods: {
     ...Formatting,
     ...CSV,
-    editInfo (item, index) {
-      this.editModal = { item, index }
+    displayEditModal (transaction) {
+      this.editModalData = transaction
       this.$bvModal.show('edit-modal')
     },
-    showInfo (item, index) {
-      this.infoModal = { item, index }
+    displayInfoModal (transaction) {
+      this.infoModalData = transaction
       this.$bvModal.show('info-modal')
     },
-    confirmDeleteRow (item, index) {
-      this.confirmDeleteModal = { item, index }
+    displayDeleteModal (transaction) {
+      this.deleteModalData = transaction
       this.$bvModal.show('confirm-delete-modal')
     },
-    async deleteRow (id) {
+    async deleteTransaction (id) {
       // Remove locally
       this.transactionsRawData = this.transactionsRawData.filter(transaction => transaction.id !== id)
 
@@ -226,8 +211,11 @@ export default {
         variables: { id }
       })
     },
-    commitEdit (newItem, index) {
-      this.transactions[index] = { TransactionNo: newItem.TransactionNo, price: { cost: newItem.price }, NoItems: newItem.NoItems }
+    commitEdit (newItem, id) {
+      // Update locally
+      this.transactionsRawData = this.transactionsRawData.filter(transaction => transaction.id !== id)
+      this.transactionsRawData.push(newItem)
+
       // TODO - update to server
     },
     filterByDate (option) {

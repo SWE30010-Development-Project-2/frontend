@@ -1,7 +1,7 @@
 <template>
   <b-modal :id="id" title="Edit Transaction">
     <b-list-group>
-      <searched-item v-for="(product, index) in transaction.products" :key="index" :name="product.name" @deleteItem="transaction.products = transaction.products.filter(p => p.id !== product.id)" />
+      <searched-item v-for="(product, index) in transaction.products" :key="index" :name="product.name" @deleteItem="transaction.products.splice(index, 1)" />
     </b-list-group>
     <div slot="modal-footer">
       <b-button variant="primary" @click="$bvModal.hide(id); $emit('commitEdit', transaction)">
