@@ -16,9 +16,6 @@
       <b-nav-item href="/displaystock">
         Display Stock
       </b-nav-item>
-      <b-nav-item href="/login">
-        Login
-      </b-nav-item>
       <b-nav-item href="/salesstatistics">
         Sales Statistics
       </b-nav-item>
@@ -32,6 +29,9 @@
           :src="user.avatar"
           :alt="user.username"
         />
+      </b-nav-item>
+      <b-nav-item v-else href="/login">
+        Login
       </b-nav-item>
     </b-navbar-nav>
   </b-navbar>
@@ -62,6 +62,7 @@ export default {
   methods: {
     logout () {
       this.$store.commit('auth/LOGOUT')
+      this.$router.push('/login')
     }
   }
 }

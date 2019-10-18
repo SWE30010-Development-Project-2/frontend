@@ -1,10 +1,7 @@
-mutation UpdateTransaction ($id: String!, $employee: ID!, $products: [ID!]!) {
-    updateTransaction(id: $id, employee: $employee, products: $products)
+mutation UpdateTransaction ($id: String!, $products: [ID]) {
+    updateTransaction(id: $id, products: $products)
     {
         id,
-        employee {
-            id
-        },
         products {
             id
         }

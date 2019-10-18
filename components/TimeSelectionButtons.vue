@@ -9,8 +9,8 @@
     <b-button @click="$emit('month')">
       Past Month
     </b-button>
-    <b-button @click="$emit('year')">
-      Past Year
+    <b-button @click="$emit('all-time')">
+      All Time
     </b-button>
     </b>
   </div>
