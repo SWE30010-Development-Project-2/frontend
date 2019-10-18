@@ -9,9 +9,9 @@
           </h1>
         </b-col>
       </b-row>
-      <request-sales-stats-form v-if="state==='form'" @request-sent="state='loading-report'; sleep(500).then(() => {state='report'})" />
+      <request-sales-stats-form v-if="state==='form'" @request-sent="timePeriod = $event.timePeriod; state='loading-report'; sleep(500).then(() => {state='report'})" />
       <loading-report v-else-if="state==='loading-report'" />
-      <report v-else-if="state==='report'" />
+      <report v-else-if="state==='report'" :time-period="timePeriod" />
     </div>
   </div>
 </template>
@@ -29,7 +29,8 @@ export default {
   },
   data () {
     return {
-      state: 'form'
+      state: 'form',
+      timePeriod: {}
     }
   },
   computed: {

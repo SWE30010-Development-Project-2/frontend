@@ -218,7 +218,6 @@ export default {
         mutation: UPDATE_TRANSACTION,
         variables: {
           id,
-          employee: this.user.id,
           products: newItem.products.map(product => product.id)
         }
       })
