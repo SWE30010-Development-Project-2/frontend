@@ -25,7 +25,7 @@
       <!-- User Interface controls -->
       <b-row class="mt-3 mb-3">
         <b-col>
-          <time-selection-buttons @today="filterByDate('today')" @week="filterByDate('week')" @month="filterByDate('month')" @year="filterByDate('year')" />
+          <time-selection-buttons @today="filterByDate('today')" @week="filterByDate('week')" @month="filterByDate('month')" @all-time="filterByDate('all time')" />
         </b-col>
         <b-col cols="auto">
           <b-button variant="warning" @click="exportToCSV(transactions)">
@@ -98,6 +98,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Moment from 'moment'
+import { extendMoment } from 'moment-range'
 import Navbar from '~/components/Navbar.vue'
 import TimeSelectionButtons from '~/components/TimeSelectionButtons.vue'
 import SortControl from '~/components/SortControl.vue'
@@ -110,6 +112,8 @@ import UPDATE_TRANSACTION from '~/graphql/sale/UPDATE_TRANSACTION.gql'
 import REMOVE_TRANSACTION from '~/graphql/sale/REMOVE_TRANSACTION.gql'
 import Formatting from '~/assets/formatting.js'
 import CSV from '~/assets/csv.js'
+
+const moment = extendMoment(Moment)
 
 export default {
   components: {
@@ -129,6 +133,7 @@ export default {
       sortDesc: false,
       filter: null,
       filterOn: [],
+      dateRange: null,
       editModalData: {},
       deleteModalData: {},
       infoModalData: {}
@@ -144,7 +149,7 @@ export default {
         })
     },
     transactions () {
-      return this.transactionsRawData.map(function (t) {
+      const result = this.transactionsRawData.map(function (t) {
         // Number of items
         let NoItems = 0
         if (t.products != null) {
@@ -171,6 +176,12 @@ export default {
 
         return { NoItems, price, productsNice, ...t }
       })
+
+      if (this.dateRange === null) {
+        return result
+      } else {
+        return result.filter(t => moment(Number(t.createdAt)).within(this.dateRange))
+      }
     },
     ...mapGetters({
       user: 'auth/user'
@@ -223,21 +234,15 @@ export default {
       })
     },
     filterByDate (option) {
-      // Get Date
-      const today = new Date()
-      const dd = String(today.getDate()).padStart(2, '0')
-      const mm = String(today.getMonth() + 1).padStart(2, '0')
-      const yyyy = today.getFullYear()
-
       // Do Filtering
       if (option === 'today') {
-        this.filter = dd + '/' + mm + '/' + yyyy
+        this.dateRange = moment.range(moment().startOf('day'), moment().endOf('day'))
       } else if (option === 'week') {
-        // Do Something
+        this.dateRange = moment.range(moment().startOf('week'), moment().endOf('week'))
       } else if (option === 'month') {
-        this.filter = mm + '/' + yyyy
-      } else if (option === 'year') {
-        this.filter = yyyy
+        this.dateRange = moment.range(moment().startOf('month'), moment().endOf('month'))
+      } else if (option === 'all time') {
+        this.dateRange = null
       }
     },
     async fetchTransactions () {
