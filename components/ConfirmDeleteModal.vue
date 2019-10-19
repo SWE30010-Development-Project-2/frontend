@@ -32,11 +32,6 @@ export default {
       type: Object,
       default: () => null,
       required: true
-    },
-    index: {
-      type: Number,
-      default: -1,
-      required: true
     }
   }
 }

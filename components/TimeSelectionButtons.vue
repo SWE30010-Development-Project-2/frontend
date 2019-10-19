@@ -23,11 +23,3 @@ div {
   text-align: center;
 }
 </style>
-
-<script>
-// export default {
-//   props: {
-//
-//   }
-// }
-</script>
