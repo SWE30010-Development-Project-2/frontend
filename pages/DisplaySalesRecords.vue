@@ -221,8 +221,8 @@ export default {
     },
     async updateTransaction (newItem, id) {
       // Update locally
-      this.transactionsRawData = this.transactionsRawData.filter(transaction => transaction.id !== id)
-      this.transactionsRawData.push(newItem)
+      // this.transactionsRawData = this.transactionsRawData.filter(transaction => transaction.id !== id)
+      // this.transactionsRawData = [...this.transactionsRawData, newItem]
 
       // Update to server
       await this.$apollo.mutate({
