@@ -13,7 +13,17 @@ export default {
   data: () => ({
     options: {
       responsive: true,
-      maintainAspectRatio: false
+      maintainAspectRatio: false,
+      scales: {
+        yAxes: [{
+          ticks: {
+            // Include a dollar sign in the ticks
+            callback (value, index, values) {
+              return '$' + value
+            }
+          }
+        }]
+      }
     },
     colours: [
       '#3b8070',

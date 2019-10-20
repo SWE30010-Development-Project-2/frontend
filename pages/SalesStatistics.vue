@@ -13,7 +13,7 @@
         <request-sales-stats-form @request-sent="timePeriod = $event.timePeriod; selected = $event.selected; state='report'" />
       </template>
       <template v-else-if="state==='report'">
-        <report v-if="selected.type === 'products'" :date-range="dateRange" :products="selected.products" />
+        <report-products v-if="selected.type === 'products'" :date-range="dateRange" :products="selected.products" />
       </template>
     </div>
   </div>
@@ -25,13 +25,13 @@ import Moment from 'moment'
 import { extendMoment } from 'moment-range'
 import Navbar from '~/components/Navbar.vue'
 import RequestSalesStatsForm from '~/components/RequestSalesStatsForm.vue'
-import Report from '~/components/Report.vue'
+import ReportProducts from '~/components/ReportProducts.vue'
 
 const moment = extendMoment(Moment)
 
 export default {
   components: {
-    Navbar, RequestSalesStatsForm, Report
+    Navbar, RequestSalesStatsForm, ReportProducts
   },
   data () {
     return {

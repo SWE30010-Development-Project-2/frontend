@@ -18,15 +18,24 @@
     </b-row>
     <b-row class="mb-4">
       <b-col>
+        <h2 class="h3 display-6">
+          Total sales per
+          <template v-if="dateRange.weekly">
+            week
+          </template>
+          <template v-else>
+            month
+          </template>
+        </h2>
         <graph :data="statisticsAggregatedByProduct" />
       </b-col>
     </b-row>
 
     <b-row v-for="(product, index) in statisticsAggregatedByProduct" :key="index" class="mb-4">
       <b-col>
-        <h2 class="h3">
+        <h3 class="h4 display-6">
           {{ product.name }}
-        </h2>
+        </h3>
 
         <b-table
           show-empty
