@@ -2,15 +2,19 @@
   <div>
     <navbar title="Sales Statistics" />
     <div class="container">
-      <b-row class="pt-5 pb-3">
-        <b-col>
-          <h1 class="display-4 text-center">
-            Sales Statistics
-          </h1>
-        </b-col>
-      </b-row>
-      <request-sales-stats-form v-if="state==='form'" @request-sent="timePeriod = $event.timePeriod; selected = $event.selected; state='report'" />
-      <report v-else-if="state==='report'" :date-range="dateRange" :products="selected.products" />
+      <template v-if="state==='form'">
+        <b-row class="pt-5 pb-3">
+          <b-col>
+            <h1 class="display-4 text-center">
+              Sales Statistics
+            </h1>
+          </b-col>
+        </b-row>
+        <request-sales-stats-form @request-sent="timePeriod = $event.timePeriod; selected = $event.selected; state='report'" />
+      </template>
+      <template v-else-if="state==='report'">
+        <report v-if="selected.type === 'products'" :date-range="dateRange" :products="selected.products" />
+      </template>
     </div>
   </div>
 </template>

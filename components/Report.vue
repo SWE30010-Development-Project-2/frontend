@@ -1,10 +1,32 @@
 <template>
   <div>
-    <graph :data="statisticsAggregatedByProduct" />
+    <b-row class="pt-5 pb-3 mb-4">
+      <b-col>
+        <h1 class="display-5">
+          Sales report comparing the
+          <template v-if="dateRange.weekly">
+            weekly
+          </template>
+          <template v-else>
+            monthly
+          </template>
+          sales of {{ formatListProductsSimple(products) }}
+          from {{ formatAsDate(dateRange.startDate) }}
+          until {{ formatAsDate(dateRange.endDate) }}
+        </h1>
+      </b-col>
+    </b-row>
+    <b-row class="mb-4">
+      <b-col>
+        <graph :data="statisticsAggregatedByProduct" />
+      </b-col>
+    </b-row>
 
     <b-row v-for="(product, index) in statisticsAggregatedByProduct" :key="index" class="mb-4">
       <b-col>
-        <h2>{{ product.name }}</h2>
+        <h2 class="h3">
+          {{ product.name }}
+        </h2>
 
         <b-table
           show-empty
@@ -53,7 +75,7 @@ export default {
   },
   data: () => ({
     transactionsRawData: [],
-    sortBy: 'date',
+    sortBy: null,
     sortDesc: false
   }),
   computed: {

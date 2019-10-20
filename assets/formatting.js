@@ -22,6 +22,18 @@ export default {
       return ''
     }
   },
+  formatListProductsSimple (products) {
+    if (products) {
+      let text = ''
+      for (const p of products) {
+        text += p.name + ', '
+      }
+      text = text.slice(0, -2)
+      return text
+    } else {
+      return ''
+    }
+  },
   formatListProductsShort (products) {
     if (products) {
       let text = ''
