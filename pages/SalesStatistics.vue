@@ -9,8 +9,8 @@
           </h1>
         </b-col>
       </b-row>
-      <request-sales-stats-form v-if="state==='form'" @request-sent="timePeriod = $event.timePeriod;state='report'" />
-      <report v-else-if="state==='report'" :date-range="dateRange" />
+      <request-sales-stats-form v-if="state==='form'" @request-sent="timePeriod = $event.timePeriod; selected = $event.selected; state='report'" />
+      <report v-else-if="state==='report'" :date-range="dateRange" :products="selected.products" />
     </div>
   </div>
 </template>
@@ -32,7 +32,8 @@ export default {
   data () {
     return {
       state: 'form',
-      timePeriod: {}
+      timePeriod: {},
+      selected: {}
     }
   },
   computed: {
@@ -42,8 +43,8 @@ export default {
     dateRange () {
       if (this.timePeriod.weekly) {
         // Weekly
-        const startDate = moment().set({ 'year': this.timePeriod.startDate.year, 'week': this.timePeriod.startDate.week }).startOf('week')
-        const endDate = moment().set({ 'year': this.timePeriod.endDate.year, 'week': this.timePeriod.endDate.week }).endOf('week')
+        const startDate = moment().set({ 'year': this.timePeriod.startDate.year, 'week': this.timePeriod.startDate.week }).startOf('isoWeek')
+        const endDate = moment().set({ 'year': this.timePeriod.endDate.year, 'week': this.timePeriod.endDate.week }).endOf('isoWeek')
         const range = moment.range(startDate, endDate)
         const dates = Array.from(range.by('week', { excludeEnd: false }))
         return { weekly: true, startDate, endDate, range, dates }

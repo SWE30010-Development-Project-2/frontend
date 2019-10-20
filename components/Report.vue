@@ -24,6 +24,10 @@ export default {
     dateRange: {
       type: Object,
       required: true
+    },
+    products: {
+      type: Array,
+      required: true
     }
   },
   data: () => ({
@@ -31,20 +35,63 @@ export default {
     transactionsRawData: []
   }),
   computed: {
-    transactionsInRange () {
+    transactionsInRange () { // Not needed anymore
       return this.transactionsRawData.filter(t => moment(Number(t.createdAt)).within(this.dateRange.range))
     },
     transactionsByMonth () {
-      return this.dateRange.dates.map(d => ({ date: d, transactions: this.transactionsInMonth(d) }))
+      return this.dateRange.dates.map(d => ({ date: d, transactions: this.transactionsInInterval(d, 'month') }))
+    },
+    transactionsByWeek () {
+      return this.dateRange.dates.map(d => ({ date: d, transactions: this.transactionsInInterval(d, 'isoWeek') }))
+    },
+    transactionsByProduct () {
+      if (this.dateRange.weekly) {
+        return this.products.map(p => ({ product: p, dates: this.transactionsOfProductWeekly(p) }))
+      } else {
+        return this.products.map(p => ({ product: p, dates: this.transactionsOfProductMonthly(p) }))
+      }
+    },
+    statisticsAggregatedByProduct () {
+      return this.transactionsByProduct.map(function (product) {
+        const dates = product.dates.map(function (d) {
+          // Number of individual sales
+          let noItems = 0
+          for (const t of d.transactions) {
+            if (t.products != null) {
+              noItems += t.products.length
+            }
+          }
+
+          // Price
+          let price = 0
+          for (const t of d.transactions) {
+            if (t.products != null) {
+              for (const p of t.products) {
+                price += p.price
+              }
+            }
+          }
+
+          return { date: d.date, noItems, price }
+        })
+
+        return { name: product.product.name, dates }
+      })
     }
   },
   mounted () {
     setTimeout(async () => { await this.fetchTransactions() }, 200)
   },
   methods: {
-    transactionsInMonth (month) {
-      const range = moment.rangeFromInterval('month', 1, month)
+    transactionsInInterval (date, interval) {
+      const range = moment.rangeFromInterval(interval, 1, date)
       return this.transactionsRawData.filter(t => moment(Number(t.createdAt)).within(range))
+    },
+    transactionsOfProductWeekly (product) {
+      return this.transactionsByWeek.map(d => ({ date: d.date, transactions: d.transactions.map(t => ({ products: t.products.filter(p => p.name === product.name) })) }))
+    },
+    transactionsOfProductMonthly (product) {
+      return this.transactionsByMonth.map(d => ({ date: d.date, transactions: d.transactions.map(t => ({ products: t.products.filter(p => p.name === product.name) })) }))
     },
     async fetchTransactions () {
       await this.$apollo
@@ -57,7 +104,9 @@ export default {
     },
     debugStuff () {
       console.log(this.transactionsByMonth)
+      console.log(this.transactionsByProduct)
       console.log(this.dateRange)
+      console.log(this.statisticsAggregatedByProduct)
     }
   }
 }
