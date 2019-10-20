@@ -64,8 +64,8 @@ export default {
     fields () {
       return [
         { key: 'date', label: (this.dateRange.weekly) ? 'Week Starting' : 'Month Starting', sortable: false },
-        { key: 'noItems', label: 'Total Sales ($)', sortable: true, sortDirection: 'desc', class: 'text-center' },
-        { key: 'price', label: 'Total Sales (number sold)', sortable: true, sortDirection: 'desc', class: 'text-center' }
+        { key: 'noItems', label: 'Total Sales (number sold)', sortable: true, sortDirection: 'desc', class: 'text-center' },
+        { key: 'price', label: 'Total Sales ($)', sortable: true, sortDirection: 'desc', class: 'text-center' }
       ]
     },
     transactionsInRange () { // Not needed anymore
