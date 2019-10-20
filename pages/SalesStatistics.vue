@@ -9,23 +9,25 @@
           </h1>
         </b-col>
       </b-row>
-      <request-sales-stats-form v-if="state==='form'" @request-sent="timePeriod = $event.timePeriod; state='loading-report'; sleep(500).then(() => {state='report'})" />
-      <loading-report v-else-if="state==='loading-report'" />
-      <report v-else-if="state==='report'" :time-period="timePeriod" />
+      <request-sales-stats-form v-if="state==='form'" @request-sent="timePeriod = $event.timePeriod;state='report'" />
+      <report v-else-if="state==='report'" :date-range="dateRange" />
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import Moment from 'moment'
+import { extendMoment } from 'moment-range'
 import Navbar from '~/components/Navbar.vue'
 import RequestSalesStatsForm from '~/components/RequestSalesStatsForm.vue'
-import LoadingReport from '~/components/LoadingReport.vue'
 import Report from '~/components/Report.vue'
+
+const moment = extendMoment(Moment)
 
 export default {
   components: {
-    Navbar, RequestSalesStatsForm, LoadingReport, Report
+    Navbar, RequestSalesStatsForm, Report
   },
   data () {
     return {
@@ -36,20 +38,30 @@ export default {
   computed: {
     ...mapGetters({
       user: 'auth/user'
-    })
+    }),
+    dateRange () {
+      if (this.timePeriod.weekly) {
+        // Weekly
+        const startDate = moment().set({ 'year': this.timePeriod.startDate.year, 'week': this.timePeriod.startDate.week }).startOf('week')
+        const endDate = moment().set({ 'year': this.timePeriod.endDate.year, 'week': this.timePeriod.endDate.week }).endOf('week')
+        const range = moment.range(startDate, endDate)
+        const dates = Array.from(range.by('week', { excludeEnd: false }))
+        return { weekly: true, startDate, endDate, range, dates }
+      } else {
+        // Monthly
+        const startDate = moment().set({ 'year': this.timePeriod.startDate.year, 'month': this.timePeriod.startDate.month }).startOf('month')
+        const endDate = moment().set({ 'year': this.timePeriod.endDate.year, 'month': this.timePeriod.endDate.month }).endOf('month')
+        const range = moment.range(startDate, endDate)
+        const dates = Array.from(range.by('month', { excludeEnd: false }))
+        return { monthly: true, startDate, endDate, range, dates }
+      }
+    }
   },
   mounted () {
     setTimeout(async () => { await this.fetchProducts() }, 200)
     if (this.user === null) {
       this.$router.push('/login')
     }
-  },
-
-  methods: {
-    sleep (time) {
-      return new Promise(resolve => setTimeout(resolve, time))
-    }
-
   }
 }
 </script>

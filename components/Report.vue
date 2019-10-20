@@ -1,7 +1,7 @@
 <template>
   <div>
-    <graph :products="graphdata" weekly start-date="2015-07-01" end-date="2015-12-01" />
-    <graph :products="graphdata" monthly start-date="2015-07-01" end-date="2015-12-01" />
+    <!-- <graph :products="graphdata" weekly start-date="2015-07-01" end-date="2015-12-01" />
+    <graph :products="graphdata" monthly start-date="2015-07-01" end-date="2015-12-01" /> -->
     <b-button @click="debugStuff()">
       Debug
     </b-button>
@@ -11,17 +11,17 @@
 <script>
 import Moment from 'moment'
 import { extendMoment } from 'moment-range'
-import Graph from '~/components/Graph.vue'
+// import Graph from '~/components/Graph.vue'
 import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
 
 const moment = extendMoment(Moment)
 
 export default {
-  components: {
-    Graph
-  },
+  // components: {
+  //   Graph
+  // },
   props: {
-    timePeriod: {
+    dateRange: {
       type: Object,
       required: true
     }
@@ -32,17 +32,20 @@ export default {
   }),
   computed: {
     transactionsInRange () {
-      const startDate = moment('2019-01-01').startOf('day')
-      const endDate = moment('2020-01-01').startOf('day')
-      const dateRange = moment.range(startDate, endDate)
-
-      return this.transactionsRawData.filter(t => moment(Number(t.createdAt)).within(dateRange))
+      return this.transactionsRawData.filter(t => moment(Number(t.createdAt)).within(this.dateRange.range))
+    },
+    transactionsByMonth () {
+      return this.dateRange.dates.map(d => ({ date: d, transactions: this.transactionsInMonth(d) }))
     }
   },
   mounted () {
     setTimeout(async () => { await this.fetchTransactions() }, 200)
   },
   methods: {
+    transactionsInMonth (month) {
+      const range = moment.rangeFromInterval('month', 1, month)
+      return this.transactionsRawData.filter(t => moment(Number(t.createdAt)).within(range))
+    },
     async fetchTransactions () {
       await this.$apollo
         .query({
@@ -53,9 +56,8 @@ export default {
         })
     },
     debugStuff () {
-      console.log(this.transactionsRawData)
-      console.log(this.transactionsInRange)
-      console.log(this.timePeriod)
+      console.log(this.transactionsByMonth)
+      console.log(this.dateRange)
     }
   }
 }
