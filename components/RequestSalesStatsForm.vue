@@ -72,7 +72,7 @@
     </b-row>
     <b-row class="mb-4">
       <b-col class="text-right">
-        <b-button variant="primary" @click="generateReport()">
+        <b-button variant="primary" :disabled="!valid" @click="generateReport()">
           Generate Report
         </b-button>
       </b-col>
@@ -140,6 +140,28 @@ export default {
 
         return name.includes(search) || search.includes(name)
       })
+    },
+    valid () {
+      // Validate date
+      const validYear = this.timePeriod.startDate.year && this.timePeriod.endDate.year
+      const validWeek = this.timePeriod.startDate.week && this.timePeriod.endDate.week
+      const validMonth = this.timePeriod.startDate.month && this.timePeriod.endDate.month
+
+      let validDate
+      if (this.timePeriod.weekly) {
+        validDate = validYear && validWeek
+      } else {
+        validDate = validYear && validMonth
+      }
+
+      // Validate selection
+      let validSelection = true
+      if (this.selected.tab === 1) {
+        validSelection = this.selected.products.length >= 1
+      }
+
+      // Return
+      return validDate && validSelection
     }
   },
   mounted () {
