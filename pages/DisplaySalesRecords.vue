@@ -25,7 +25,7 @@
       <!-- User Interface controls -->
       <b-row class="mt-3 mb-3">
         <b-col>
-          <time-selection-buttons @today="filterByDate('today')" @week="filterByDate('week')" @month="filterByDate('month')" @all-time="filterByDate('all time')" />
+          <time-selection-buttons @today="filterByDate('day')" @week="filterByDate('isoWeek')" @month="filterByDate('month')" @all-time="filterByDate('all time')" />
         </b-col>
         <b-col cols="auto">
           <b-button variant="warning" @click="exportToCSV(transactions)">
@@ -234,15 +234,10 @@ export default {
       })
     },
     filterByDate (option) {
-      // Do Filtering
-      if (option === 'today') {
-        this.dateRange = moment.range(moment().startOf('day'), moment().endOf('day'))
-      } else if (option === 'week') {
-        this.dateRange = moment.range(moment().startOf('week'), moment().endOf('week'))
-      } else if (option === 'month') {
-        this.dateRange = moment.range(moment().startOf('month'), moment().endOf('month'))
-      } else if (option === 'all time') {
+      if (option === 'all time') {
         this.dateRange = null
+      } else {
+        this.dateRange = moment.range(moment().startOf(option), moment().endOf(option))
       }
     },
     async fetchTransactions () {
