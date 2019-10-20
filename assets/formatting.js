@@ -7,6 +7,9 @@ export default {
   formatAsTime (time) {
     return moment(Number(time)).format('hh:mm:ss a - DD/MM/YYYY')
   },
+  formatAsDate (date) {
+    return moment(Number(date)).format('DD/MM/YYYY')
+  },
   formatListAllProducts (products) {
     if (products) {
       let text = ''

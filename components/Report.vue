@@ -5,6 +5,29 @@
     <b-button @click="debugStuff()">
       Debug
     </b-button>
+
+    <b-row v-for="(product, index) in statisticsAggregatedByProduct" :key="index" class="mb-4">
+      <b-col>
+        <h2>{{ product.name }}</h2>
+        <b-table
+          show-empty
+          small
+          stacked="md"
+          :items="product.dates"
+          :fields="fields"
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+        >
+          <template v-slot:cell(price)="row">
+            {{ formatAsPrice(row.value) }}
+          </template>
+
+          <template v-slot:cell(date)="row">
+            {{ formatAsDate(row.value) }}
+          </template>
+        </b-table>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
@@ -13,6 +36,7 @@ import Moment from 'moment'
 import { extendMoment } from 'moment-range'
 // import Graph from '~/components/Graph.vue'
 import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
+import Formatting from '~/assets/formatting.js'
 
 const moment = extendMoment(Moment)
 
@@ -32,9 +56,18 @@ export default {
   },
   data: () => ({
     graphdata: [{ name: 'Product 1', data: [40, 20, 10, 30, 20, 2, 3, 40, 12] }],
-    transactionsRawData: []
+    transactionsRawData: [],
+    sortBy: 'date',
+    sortDesc: false
   }),
   computed: {
+    fields () {
+      return [
+        { key: 'date', label: (this.dateRange.weekly) ? 'Week Starting' : 'Month Starting', sortable: false },
+        { key: 'noItems', label: 'Total Sales ($)', sortable: true, sortDirection: 'desc', class: 'text-center' },
+        { key: 'price', label: 'Total Sales (number sold)', sortable: true, sortDirection: 'desc', class: 'text-center' }
+      ]
+    },
     transactionsInRange () { // Not needed anymore
       return this.transactionsRawData.filter(t => moment(Number(t.createdAt)).within(this.dateRange.range))
     },
@@ -83,6 +116,7 @@ export default {
     setTimeout(async () => { await this.fetchTransactions() }, 200)
   },
   methods: {
+    ...Formatting,
     transactionsInInterval (date, interval) {
       const range = moment.rangeFromInterval(interval, 1, date)
       return this.transactionsRawData.filter(t => moment(Number(t.createdAt)).within(range))
