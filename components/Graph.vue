@@ -1,73 +1,60 @@
 <script>
 import { Line } from 'vue-chartjs'
-import Moment from 'moment'
-import { extendMoment } from 'moment-range'
-
-const moment = extendMoment(Moment)
+import Formatting from '~/assets/formatting.js'
 
 export default {
   extends: Line,
   props: {
-    products: {
+    data: {
       type: Array,
       required: true
-    },
-    startDate: {
-      type: String,
-      required: true
-    },
-    endDate: {
-      type: String,
-      required: true
-    },
-    weekly: {
-      type: Boolean,
-      default: false
     }
   },
   data: () => ({
     options: {
       responsive: true,
       maintainAspectRatio: false
-    }
+    },
+    colours: [
+      '#3b8070',
+      '#007bff',
+      '#28a745',
+      '#ffc107',
+      '#dc3545',
+      '#17a2b8',
+      '#563d7c'
+    ]
   }),
   computed: {
     chartdata () {
-      return {
-        labels: listDaysInRange(this.startDate, this.endDate, this.weekly),
-        datasets: [
-          {
-            label: this.products[0].name,
-            backgroundColor: '#3b80703F', // 25% transparency
-            borderColor: '#3b8070',
-            data: this.products[0].data
-          }
-        ]
-      }
+      const labels = this.data[0].dates.map(d => this.formatAsDate(d.date))
+      const datasets = this.data.map((product, index) => ({
+        label: product.name,
+        backgroundColor: this.colours[index] + '3F',
+        borderColor: this.colours[index],
+        data: product.dates.map(d => d.price)
+      }))
+
+      return { labels, datasets }
     }
   },
   mounted () {
     this.renderChart(this.chartdata, this.options)
-  }
-}
-
-const listDaysInRange = function (startDate, endDate, weekly) {
-  if (weekly) {
-    // Weekly
-    const sDate = moment(startDate).startOf('week')
-    const eDate = moment(endDate).startOf('week')
-    const range = moment.range(sDate, eDate)
-
-    const dates = Array.from(range.by('week', { excludeEnd: false }))
-    return dates.map(m => m.format('DD/MM/YYYY'))
-  } else {
-    // Monthly
-    const sDate = moment(startDate).startOf('month')
-    const eDate = moment(endDate).startOf('month')
-    const range = moment.range(sDate, eDate)
-
-    const dates = Array.from(range.by('month', { excludeEnd: false }))
-    return dates.map(m => m.format('MMM YYYY'))
+  },
+  methods: {
+    ...Formatting,
+    stringToColour (str) {
+      let hash = 0
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash)
+      }
+      let colour = '#'
+      for (let j = 0; j < 3; j++) {
+        const value = (hash >> (j * 8)) & 0xFF
+        colour += ('00' + value.toString(16)).substr(-2)
+      }
+      return colour
+    }
   }
 }
 </script>

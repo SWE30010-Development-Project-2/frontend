@@ -1,14 +1,11 @@
 <template>
   <div>
-    <!-- <graph :products="graphdata" weekly start-date="2015-07-01" end-date="2015-12-01" />
-    <graph :products="graphdata" monthly start-date="2015-07-01" end-date="2015-12-01" /> -->
-    <b-button @click="debugStuff()">
-      Debug
-    </b-button>
+    <graph :data="statisticsAggregatedByProduct" />
 
     <b-row v-for="(product, index) in statisticsAggregatedByProduct" :key="index" class="mb-4">
       <b-col>
         <h2>{{ product.name }}</h2>
+
         <b-table
           show-empty
           small
@@ -34,16 +31,16 @@
 <script>
 import Moment from 'moment'
 import { extendMoment } from 'moment-range'
-// import Graph from '~/components/Graph.vue'
+import Graph from '~/components/Graph.vue'
 import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
 import Formatting from '~/assets/formatting.js'
 
 const moment = extendMoment(Moment)
 
 export default {
-  // components: {
-  //   Graph
-  // },
+  components: {
+    Graph
+  },
   props: {
     dateRange: {
       type: Object,
@@ -55,7 +52,6 @@ export default {
     }
   },
   data: () => ({
-    graphdata: [{ name: 'Product 1', data: [40, 20, 10, 30, 20, 2, 3, 40, 12] }],
     transactionsRawData: [],
     sortBy: 'date',
     sortDesc: false
@@ -135,12 +131,6 @@ export default {
         .then(({ data }) => {
           this.transactionsRawData = data.transactions
         })
-    },
-    debugStuff () {
-      console.log(this.transactionsByMonth)
-      console.log(this.transactionsByProduct)
-      console.log(this.dateRange)
-      console.log(this.statisticsAggregatedByProduct)
     }
   }
 }
