@@ -10,7 +10,7 @@
           <template v-else>
             monthly
           </template>
-          sales of {{ formatListProductsSimple(products) }}
+          sales of all products
           from {{ formatAsDate(dateRange.startDate) }}
           until {{ formatAsDate(dateRange.endDate) }}
         </h1>
@@ -27,21 +27,21 @@
             month
           </template>
         </h2>
-        <graph :data="statisticsAggregatedByProduct" />
+        <graph-all :data="{ dates: statisticsAggregated } " />
       </b-col>
     </b-row>
 
-    <b-row v-for="(product, index) in statisticsAggregatedByProduct" :key="index" class="mb-4">
+    <b-row class="mb-4">
       <b-col>
         <h3 class="h4 display-6">
-          {{ product.name }}
+          Statistics for all sales
         </h3>
 
         <b-table
           show-empty
           small
           stacked="md"
-          :items="product.dates"
+          :items="statisticsAggregated"
           :fields="fields"
           :sort-by.sync="sortBy"
           :sort-desc.sync="sortDesc"
@@ -62,7 +62,7 @@
 <script>
 import Moment from 'moment'
 import { extendMoment } from 'moment-range'
-import Graph from '~/components/Graph.vue'
+import GraphAll from '~/components/GraphAll.vue'
 import FETCH_TRANSACTIONS from '~/graphql/sale/FETCH_TRANSACTIONS.gql'
 import Formatting from '~/assets/formatting.js'
 
@@ -70,15 +70,11 @@ const moment = extendMoment(Moment)
 
 export default {
   components: {
-    Graph
+    GraphAll
   },
   props: {
     dateRange: {
       type: Object,
-      required: true
-    },
-    products: {
-      type: Array,
       required: true
     }
   },
@@ -95,44 +91,30 @@ export default {
         { key: 'price', label: 'Total Sales ($)', sortable: true, sortDirection: 'desc', class: 'text-center' }
       ]
     },
-    transactionsByMonth () {
-      return this.dateRange.dates.map(d => ({ date: d, transactions: this.transactionsInInterval(d, 'month') }))
+    transactionsByInterval () {
+      const interval = (this.dateRange.weekly) ? 'isoWeek' : 'month'
+      return this.dateRange.dates.map(date => ({ date, transactions: this.transactionsInInterval(date, interval) }))
     },
-    transactionsByWeek () {
-      return this.dateRange.dates.map(d => ({ date: d, transactions: this.transactionsInInterval(d, 'isoWeek') }))
-    },
-    transactionsByProduct () {
-      if (this.dateRange.weekly) {
-        return this.products.map(p => ({ product: p, dates: this.transactionsOfProductWeekly(p) }))
-      } else {
-        return this.products.map(p => ({ product: p, dates: this.transactionsOfProductMonthly(p) }))
-      }
-    },
-    statisticsAggregatedByProduct () {
-      return this.transactionsByProduct.map(function (product) {
-        const dates = product.dates.map(function (d) {
-          // Number of individual sales
-          let noItems = 0
-          for (const t of d.transactions) {
-            if (t.products != null) {
-              noItems += t.products.length
+    statisticsAggregated () {
+      return this.transactionsByInterval.map(function (d) {
+        // Number of individual sales
+        let noItems = 0
+        for (const t of d.transactions) {
+          if (t.products != null) {
+            noItems += t.products.length
+          }
+        }
+
+        // Price
+        let price = 0
+        for (const t of d.transactions) {
+          if (t.products != null) {
+            for (const p of t.products) {
+              price += p.price
             }
           }
-
-          // Price
-          let price = 0
-          for (const t of d.transactions) {
-            if (t.products != null) {
-              for (const p of t.products) {
-                price += p.price
-              }
-            }
-          }
-
-          return { date: d.date, noItems, price }
-        })
-
-        return { name: product.product.name, dates }
+        }
+        return { date: d.date, noItems, price }
       })
     }
   },
@@ -144,12 +126,6 @@ export default {
     transactionsInInterval (date, interval) {
       const range = moment.rangeFromInterval(interval, 1, date)
       return this.transactionsRawData.filter(t => moment(Number(t.createdAt)).within(range))
-    },
-    transactionsOfProductWeekly (product) {
-      return this.transactionsByWeek.map(d => ({ date: d.date, transactions: d.transactions.map(t => ({ products: t.products.filter(p => p.name === product.name) })) }))
-    },
-    transactionsOfProductMonthly (product) {
-      return this.transactionsByMonth.map(d => ({ date: d.date, transactions: d.transactions.map(t => ({ products: t.products.filter(p => p.name === product.name) })) }))
     },
     async fetchTransactions () {
       await this.$apollo

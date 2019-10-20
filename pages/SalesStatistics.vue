@@ -14,6 +14,7 @@
       </template>
       <template v-else-if="state==='report'">
         <report-products v-if="selected.type === 'products'" :date-range="dateRange" :products="selected.products" />
+        <report-all v-if="selected.type === 'all'" :date-range="dateRange" />
       </template>
     </div>
   </div>
@@ -26,12 +27,13 @@ import { extendMoment } from 'moment-range'
 import Navbar from '~/components/Navbar.vue'
 import RequestSalesStatsForm from '~/components/RequestSalesStatsForm.vue'
 import ReportProducts from '~/components/ReportProducts.vue'
+import ReportAll from '~/components/ReportAll.vue'
 
 const moment = extendMoment(Moment)
 
 export default {
   components: {
-    Navbar, RequestSalesStatsForm, ReportProducts
+    Navbar, RequestSalesStatsForm, ReportProducts, ReportAll
   },
   data () {
     return {
