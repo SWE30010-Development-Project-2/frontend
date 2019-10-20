@@ -39,35 +39,6 @@
                 </b-col>
               </b-row>
             </b-tab>
-            <b-tab title="Item Categories">
-              <b-row>
-                <b-col cols="8">
-                  <h4>Choose Categories/Groups of Items for the Report</h4>
-                  <b-form-row class="pt-0 pb-3">
-                    <b-col>
-                      <b-form-input v-model="searchCategories" :type="search" placeholder="Search Categories" />
-                    </b-col>
-                  </b-form-row>
-                  <b-row>
-                    <b-col v-for="category in filteredCategories" :key="category.name" cols="2">
-                      <category
-                        :ticked="selected.categories.filter(cat => cat.name == category.name).length > 0 "
-                        :name="category.name"
-                        :img-src="category.img"
-                        :description="category.description"
-                        @click="toggleCategorySelection(category.name)"
-                      />
-                    </b-col>
-                  </b-row>
-                </b-col>
-                <b-col cols="4">
-                  <h4>Selected Categories</h4>
-                  <b-list-group>
-                    <searched-item v-for="(cat, index) in selected.categories" :key="index" :name="cat.name" img="/images/paracetamol.jpg" @deleteItem="selected.categories.splice(index, 1)" />
-                  </b-list-group>
-                </b-col>
-              </b-row>
-            </b-tab>
           </b-tabs>
         </b-card>
       </b-col>
@@ -117,11 +88,10 @@ import SelectWeek from '~/components/SelectWeek.vue'
 import ToggleControl from '~/components/ToggleControl.vue'
 import Product from '~/components/Product.vue'
 import FETCHPRODUCTS from '~/graphql/product/FETCHPRODUCTS.gql'
-import Category from '~/components/Category.vue'
 
 export default {
   components: {
-    SearchedItem, SelectMonth, SelectYear, SelectWeek, ToggleControl, Product, Category
+    SearchedItem, SelectMonth, SelectYear, SelectWeek, ToggleControl, Product
   },
   data () {
     return {
